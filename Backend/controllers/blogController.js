@@ -6,7 +6,7 @@ const myBlog= require('../model/blogModel')
 //@access    Private
 
 const getBlogs= asyncHandler(async (req,res)=>{
-    const posts= await myBlog.find({}).sort({createdAt:-1})
+    const posts= await myBlog.find({user: req.user.id}).sort({createdAt:-1})
     res.status(200).json(posts)
 })
 //@desc      Get a single post(or blog)
@@ -37,6 +37,8 @@ const setBlog= asyncHandler(async (req,res)=>{
       }
       const post= await myBlog.create({
         text:req.body.text,
+        user: req.user.id,
+        title: req.body.title,
       })
     res.status(200).json(post)
 })

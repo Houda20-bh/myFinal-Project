@@ -60,10 +60,17 @@ const signin = asyncHandler(async (req, res) => {
     throw new Error('Invalid credentials')
   }
 })
+// @desc    Get user data
+// @route   GET /api/users/me
+// @access  Private
+const getme = asyncHandler(async (req, res) => {
+  res.status(200).json(req.user)
+})
+
 // Generate JWT
 const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
       expiresIn: '30d',})
   }
   
-module.exports={signup,signin}
+module.exports={signup,signin,getme }

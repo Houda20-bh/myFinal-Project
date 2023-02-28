@@ -13,9 +13,5 @@ const userSchema = mongoose.Schema({
         type:String,
         required:[true,'please add a password'],
     },
-    googleId:{
-        type:String,
-        required:false,
-    },
 },{timestamps:true})
 module.exports= mongoose.model('User',userSchema)
