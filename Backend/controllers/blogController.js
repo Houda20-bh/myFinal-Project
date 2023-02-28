@@ -1,13 +1,30 @@
 const asyncHandler = require('express-async-handler')
-const { Error } = require('mongoose')
+const { Error, default: mongoose } = require('mongoose')
 const myBlog= require('../model/blogModel')
 //@desc      Get posts(or blogs)
 //@route     GET /api/blogs
 //@access    Private
 
 const getBlogs= asyncHandler(async (req,res)=>{
-    const posts= await myBlog.find()
+    const posts= await myBlog.find({}).sort({createdAt:-1})
     res.status(200).json(posts)
+})
+//@desc      Get a single post(or blog)
+//@route     GET /api/blogs/:id
+//@access    Private
+
+const getBlog= asyncHandler(async (req,res)=>{
+    const {id}= req.params
+    if(!mongoose.Types.ObjectId.isValid(id))
+    { res.status(400)
+        throw new Error('no such a blog')}
+        const post = await myBlog.findById(id)
+        if(!post)
+        {
+            res.status(400)
+            throw new Error('no such a blog') 
+        }
+    res.status(200).json(post)
 })
 //@desc      Create a post(or blog)
 //@route     POST /api/blogs
@@ -28,12 +45,16 @@ const setBlog= asyncHandler(async (req,res)=>{
 //@access    Private
 
 const updateBlog= asyncHandler(async (req,res)=>{
+    const {id}= req.params
+    if(!mongoose.Types.ObjectId.isValid(id))
+    { res.status(400)
+        throw new Error('no such a blog')}
    const blog = await myBlog.findById(req.params.id)
    if (!blog){
     res.status(400)
     throw new Error('Post not found lol')
    }
-   const updatedBlog= await myBlog.findByIdAndUpdate(req.params.id,req.body,{new:true})
+   const updatedBlog= await myBlog.findByIdAndUpdate(req.params.id,{...req.body},{new:true})
 
     res.status(200).json(updatedBlog)
 })
@@ -42,17 +63,22 @@ const updateBlog= asyncHandler(async (req,res)=>{
 //@access    Private
 
 const deleteBlog= asyncHandler(async(req,res)=>{
-  
-    const blog = await myBlog.findById(req.params.id)
-    if (!blog){
-     res.status(400)
-     throw new Error('Post not found lol')
-    }
-     await myBlog.remove()
-    res.status(200).json({id:req.params.id})
+    const {id}= req.params
+    if(!mongoose.Types.ObjectId.isValid(id))
+    { res.status(400)
+        throw new Error('no such a blog')}
+        const post = await myBlog.findByIdAndDelete(id)
+        if(!post)
+        {
+            res.status(400)
+            throw new Error('no such a blog') 
+        }
+    res.status(200).json(post)
 })
+
 module.exports={
     getBlogs,
+    getBlog,
     setBlog,
     updateBlog,
     deleteBlog,
