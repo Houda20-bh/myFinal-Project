@@ -51,11 +51,22 @@ const updateBlog= asyncHandler(async (req,res)=>{
     if(!mongoose.Types.ObjectId.isValid(id))
     { res.status(400)
         throw new Error('no such a blog')}
-   const blog = await myBlog.findById(req.params.id)
+   const blog = await myBlog.findById(id)
    if (!blog){
     res.status(400)
     throw new Error('Post not found lol')
    }
+   //check for user
+   if(!req.user){
+    res.status(401)
+    throw new Error('User not found lol')
+
+   }
+   // make sure the logged in user matches the blog user
+   if(blog.user.toString() !== req.user.id)
+   { res.status(401)
+    throw new Error('User not authorized')}
+
    const updatedBlog= await myBlog.findByIdAndUpdate(req.params.id,{...req.body},{new:true})
 
     res.status(200).json(updatedBlog)
@@ -69,13 +80,25 @@ const deleteBlog= asyncHandler(async(req,res)=>{
     if(!mongoose.Types.ObjectId.isValid(id))
     { res.status(400)
         throw new Error('no such a blog')}
-        const post = await myBlog.findByIdAndDelete(id)
-        if(!post)
-        {
-            res.status(400)
-            throw new Error('no such a blog') 
-        }
-    res.status(200).json(post)
+   const blog = await myBlog.findById(id)
+   if (!blog){
+    res.status(400)
+    throw new Error('Post not found lol')
+   }
+   //check for user
+   if(!req.user){
+    res.status(401)
+    throw new Error('User not found lol')
+
+   }
+   // make sure the logged in user matches the blog user
+   if(blog.user.toString() !== req.user.id)
+   { res.status(401)
+    throw new Error('User not authorized')}
+
+   const deletedBlog= await myBlog.findByIdAndDelete(req.params.id)
+
+    res.status(200).json(deletedBlog)
 })
 
 module.exports={
