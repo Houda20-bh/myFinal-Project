@@ -1,75 +1,106 @@
-import e from 'cors';
-import React from 'react'
+import{useDispatch, useSelector} from 'react-redux'
 import { useState, useEffect } from "react";
 import { FaUser } from 'react-icons/fa'
-import { Link} from "react-router-dom";
+import { Link,useNavigate} from "react-router-dom";
+import { register } from '../features/auth/authSlice';
+import { toast } from 'react-toastify';
+import Spinner from '../components/Spinner';
+import {Box,Button,Typography,TextField} from "@mui/material"
 function Register() {
-    const [formData, setFormData] = useState({
+    const [formValue, setFormValue] = useState({
         firstName: "",
         lastName: "",
         email:'',
         password:'',
         password2:'',
     })
-    const {firstName,lastName,email,password, password2} = formData
+    const {loading,error}= useSelector((state) => ({...state.auth}))
+    const {firstName,lastName,email,password, password2} = formValue
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    useEffect(()=>{
+      error && toast.error (error)
+    },[error]);
     const onChange =(e)=>{
- setFormData((prevState)=>({
+setFormValue((prevState)=>({
     ...prevState,[e.target.name]:e.target.value,}))
     } 
     const onSubmit =(e)=>{
         e.preventDefault()
+        if(password !== password2)
+        {
+          toast.error('Passwords do not match')
+        }
+        if(email && password && firstName && lastName && password2){
+          dispatch(register({formValue,navigate,toast}))
+        }
     }
     return  (
-        <>
-          <section className='heading'>
-        <h1>
-          <FaUser /> Register
-        </h1>
-        <p>Please create an account</p>
-      </section>
-          <section className="form">
-            <form onSubmit={onSubmit}>
-                <div className="form-group">
-                <input type="text" className="form-control"
+      <>
+      <form onSubmit={onSubmit}>
+        <Box maxWidth={600}
+        display={"flex"} flexDirection="column" 
+                 alignItems={'center'} justifyContent='center' 
+                 boxShadow="10px 10px 20px #ccc "
+                 padding={3}
+                 margin='auto'
+                 marginTop={5} borderRadius={5}>
+                   <Typography variant='h6' padding={3} textAlign='center'>
+                   <FaUser /> Register
+     <p>Please create an account</p>
+      </Typography>
+            
+                <TextField margin="normal" type="text" 
                  id='firstName'
                  name="firstName" value={firstName}
                  placeholder='Please enter your firstName'
+                 label="FirstName"
                  onChange={onChange}/>
-                 </div>
-                <div className="form-group">
-                <input type="text" className="form-control"
-                  id='lastName'
-                 name="lasttName" value={lastName}
+                
+                
+                <TextField  margin="normal" type="text" 
+                 id='lastName'
+                 name="lastName" value={lastName}
                  placeholder='Please enter your lastName'
+                 label="LastName"
                  onChange={onChange}/>
-                 </div>
-                 <div className="form-group">
-                <input type="email" className="form-control"
+                
+               
+                <TextField margin="normal" type="email" 
                  id='email'
                  name="email" value={email}
+                 label="Email"
                  placeholder='Please enter your email address'
                  onChange={onChange}/>
-                 </div>
-                 <div className="form-group">
-                <input type="password" className="form-control"
+               
+                 
+                <TextField  margin="normal"   type="password" 
                  id='password'
                  name="password" value={password}
-                 placeholder='Please enter your password'
+                 label="password"
+                 placeholder='Enter password'
                  onChange={onChange}/>
-                 </div>
-                 <div className="form-group">
-                <input type="password" className="form-control"
+                 
+                
+                <TextField  margin="normal" type="password" 
                  id='password2'
                  name="password2" value={password2}
+                 label="password2"
                  placeholder='Confirm your password'
                  onChange={onChange}/>
-                 </div>
-                 <div className="form-group">
-                    <button type='submit' className='btn btn-block'>Submit</button>
-                 </div>
+                 <Button  type='submit' variant='contained' sx={{marginTop:3,borderRadius:3}} color='warning'>
+                    {loading && (
+                  <Spinner 
+                    size="sm"
+                    role="status"
+                    tag="span"
+                    className="me-2"
+                  />
+                )}Submit</Button>
+                 
+                 </Box>
             </form>
-
-          </section>
+         
         </>
       );
 }
