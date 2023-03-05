@@ -5,7 +5,7 @@ import { Link,useNavigate} from "react-router-dom";
 import { register } from '../features/auth/authSlice';
 import { toast } from 'react-toastify';
 import Spinner from '../components/Spinner';
-import {Box,Button,Typography,TextField} from "@mui/material"
+import {Box,Button,Typography,TextField,InputAdornment} from "@mui/material"
 function Register() {
     const [formValue, setFormValue] = useState({
         firstName: "",
@@ -38,7 +38,7 @@ setFormValue((prevState)=>({
     return  (
       <>
       <form onSubmit={onSubmit}>
-        <Box maxWidth={600}
+        <Box width={600}
         display={"flex"} flexDirection="column" 
                  alignItems={'center'} justifyContent='center' 
                  boxShadow="10px 10px 20px #ccc "
@@ -58,7 +58,7 @@ setFormValue((prevState)=>({
                  onChange={onChange}/>
                 
                 
-                <TextField  margin="normal" type="text" 
+                <TextField   margin="normal" type="text" 
                  id='lastName'
                  name="lastName" value={lastName}
                  placeholder='Please enter your lastName'
@@ -82,7 +82,7 @@ setFormValue((prevState)=>({
                  onChange={onChange}/>
                  
                 
-                <TextField  margin="normal" type="password" 
+                <TextField   size="normal" margin="normal" type="password" 
                  id='password2'
                  name="password2" value={password2}
                  label="password2"
@@ -97,7 +97,9 @@ setFormValue((prevState)=>({
                     className="me-2"
                   />
                 )}Submit</Button>
-                 
+                 <Button variant='contained' sx={{borderRadius:3,marginTop:3}}> 
+                      <Link to='/Login'>
+                      Change to Login</Link> </Button>
                  </Box>
             </form>
          

@@ -6,9 +6,10 @@ import {AppBar,Toolbar,Typography,Box,Button,Tabs,Tab,} from "@mui/material"
 import { useState } from 'react'
 
 function Header() {
+  const {isLoggedIn }= useSelector (state=>state.auth)
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { user } = useSelector((state) => state.auth)
+  const { user } = useSelector(state => state.auth)
  const [value,setValue]= useState()
   const onLogout = () => {
     dispatch(logout())
@@ -20,22 +21,19 @@ function Header() {
        sx={{background:'linear-gradient(90deg, rgba(30,0,36,1) 0%, rgba(76,56,241,1) 35%, rgba(200,59,200,1) 100%);'}}>
      <Toolbar>
       <Typography variant='h4'> BlogsApp</Typography>
-      <Box display="flex" marginLeft={"auto"} marginRight="auto">
+      {isLoggedIn && <Box display="flex" marginLeft={"auto"} marginRight="auto">
         <Tabs textColor='inherit' value={value} onChange={(e,val)=>setValue(val)}>
         <Link to='/blogs'> <Tab label="All Blogs"></Tab>  </Link>
         <Link to='/myBlogs'>  <Tab label="My Blogs"></Tab>  </Link>
+        <Link to='/blogs/add'>  <Tab label="Add Blog"></Tab>  </Link>
         </Tabs>
 
-      </Box>
+      </Box>}
       <Box display="flex"  marginLeft='auto'>
-        {user ? (
-          
-            <Button variant='contained' sx={{margin:1,borderRadius:10}} color='warning' onClick={onLogout}>
+            {isLoggedIn && <Button onClick={onLogout} variant='contained' sx={{margin:1,borderRadius:10}} color='warning' >
               <FaSignOutAlt /> Logout
-            </Button>
-          
-        ) : (
-          <>
+            </Button>}
+          {!isLoggedIn && <>
             <Button variant='contained' sx={{margin:1,borderRadius:10}} color='warning'>
               <Link to='/login'>
                 <FaSignInAlt /> Login
@@ -46,8 +44,8 @@ function Header() {
                 <FaUser /> Register
               </Link>
               </Button>
-          </>
-        )}
+          </>}
+    
       </Box>
       </Toolbar>
     </AppBar>

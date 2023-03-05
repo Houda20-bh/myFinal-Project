@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler')
 const { Error, default: mongoose } = require('mongoose')
 const myBlog= require('../model/blogModel')
+const myUser= require('../model/userModel')
 //@desc      Get posts(or blogs)
 //@route     GET /api/blogs
 //@access    Private
@@ -31,15 +32,24 @@ const getBlog= asyncHandler(async (req,res)=>{
 //@access    Private
 
 const setBlog= asyncHandler(async (req,res)=>{
-    if (!req.body.text) {
-        res.status(400)
-        throw new Error('Please add a text field')
-      }
-      const post= await myBlog.create({
-        text:req.body.text,
-        user: req.user.id,
-        title: req.body.title,
+    const {title,description, image,user}=req.body
+   const existUser = await myUser.findById(user)
+   if(!existUser){
+    res.status(400)
+    throw new Error('Unable to find a user')
+   }
+const post= await myBlog.create({
+    title,
+    description,
+    user,
+    image,
       })
+      const session = await mongoose.startSession()
+      session.startTransaction();
+      await post.save({session});
+      existUser.blogs.push(post);
+      await existUser.save({session});
+      await session.commitTransaction();
     res.status(200).json(post)
 })
 //@desc      Update a post(or blog)
@@ -47,10 +57,7 @@ const setBlog= asyncHandler(async (req,res)=>{
 //@access    Private
 
 const updateBlog= asyncHandler(async (req,res)=>{
-    const {id}= req.params
-    if(!mongoose.Types.ObjectId.isValid(id))
-    { res.status(400)
-        throw new Error('no such a blog')}
+    const id = req.params.id
    const blog = await myBlog.findById(id)
    if (!blog){
     res.status(400)
@@ -76,30 +83,30 @@ const updateBlog= asyncHandler(async (req,res)=>{
 //@access    Private
 
 const deleteBlog= asyncHandler(async(req,res)=>{
-    const {id}= req.params
-    if(!mongoose.Types.ObjectId.isValid(id))
-    { res.status(400)
-        throw new Error('no such a blog')}
-   const blog = await myBlog.findById(id)
-   if (!blog){
-    res.status(400)
-    throw new Error('Post not found lol')
-   }
-   //check for user
-   if(!req.user){
-    res.status(401)
-    throw new Error('User not found lol')
-
-   }
-   // make sure the logged in user matches the blog user
-   if(blog.user.toString() !== req.user.id)
-   { res.status(401)
-    throw new Error('User not authorized')}
-
-   const deletedBlog= await myBlog.findByIdAndDelete(req.params.id)
-
-    res.status(200).json(deletedBlog)
-})
+    const id=req.params.id;
+      const blog = await myBlog.findByIdAndRemove(id).populate("user");
+         await blog.user.blogs.pull(blog);
+         await blog.user.save();
+    if(!blog){
+    res.status(500)
+    throw new Error('no post to delete')
+    }
+    return res.status(200).json({message:"Successfully Delete"}) })
+ //@desc      Get all blogs for a  specific user
+//@route     GET /api/blogs/user/:id
+//@access    Private
+    // 
+    const getByUserId= asyncHandler(async(req,res)=>{
+        const userId=req.params.id;
+         const    userBlogs= await myUser.findById(userId).populate('blogs');
+        if(!userBlogs){
+            res.status(500)
+    throw new Error("no Blog Found for this user")
+            
+        }
+        return res.status(200).json({blogs:userBlogs});
+    
+    })
 
 module.exports={
     getBlogs,
@@ -107,4 +114,5 @@ module.exports={
     setBlog,
     updateBlog,
     deleteBlog,
+    getByUserId,
 }

@@ -3,13 +3,26 @@ const bcrypt = require ('bcryptjs')
 const asyncHandler = require('express-async-handler')
 const myUser = require('../model/userModel')
 const { Error } = require('mongoose')
+
+//@desc GetAllusers
+//@route GET /api/users
+//@access Public
+const getAllusers = asyncHandler(async(req,res)=>{
+  const users= await myUser.find();
+  
+  if (!users) {
+    res.status(400)
+    throw new Error('No users found')
+  }
+  res.status(200).json({users})
+})
 //@desc Signup a new user
 //@route POST /api/users
 //@access Public
 const signup = asyncHandler(async(req,res)=>{
 const { email, password ,firstName, lastName } = req.body
 
-if (!firstName ||!lastName || !email || !password) {
+if (!firstName ||!lastName || !email || !password ) {
   res.status(400)
   throw new Error('Please add all fields')
 }
@@ -31,6 +44,7 @@ const user = await myUser.create({
   email,
   password: hashedPassword,
   name: `${firstName} ${lastName}`,
+  blogs:[]
 })
 const token = generateToken(user._id)
 if (user) {
@@ -49,12 +63,12 @@ const signin = asyncHandler(async (req, res) => {
   // Check for user email
   const user = await myUser.findOne({ email })
    if (!user){
-    res.status(400)
+    res.status(404)
   throw new Error('User does not exists')
    }
   if (user && (await bcrypt.compare(password, user.password))) {
     const token = generateToken(user._id)
-    res.json({user,token })
+    res.json({user,token})
   } else {
     res.status(400)
     throw new Error('Invalid credentials')
@@ -73,4 +87,4 @@ const generateToken = (id) => {
       expiresIn: '30d',})
   }
   
-module.exports={signup,signin,getme }
+module.exports={signup,signin,getme,getAllusers}

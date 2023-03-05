@@ -74,7 +74,9 @@ function Login() {
                   />
                 )}
                       login</Button>
-                      <Button  sx={{borderRadius:3,marginTop:3}}> Change to Signup </Button>
+                      <Button variant='contained' sx={{borderRadius:3,marginTop:3}}> 
+                      <Link to='/register'>
+                      Change to Signup </Link> </Button>
                       </Box>  
             </form>
   
