@@ -2,7 +2,7 @@ const express= require('express');
 const router= express.Router()
 const { getBlogs,getBlog,setBlog,updateBlog,deleteBlog,getByUserId}= require('../controllers/blogController')
 const {protect} = require ('../middleware/authMiddleware')
-router.route('/').get(protect,getBlogs).post(protect,setBlog)
+router.route('/').get(getBlogs).post(protect,setBlog)
 // router.get('/',getBlogs)
 // router.post('/',setBlog)
 

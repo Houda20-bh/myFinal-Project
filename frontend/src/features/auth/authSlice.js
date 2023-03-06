@@ -48,7 +48,8 @@ export const logout = createAsyncThunk("auth/logout",async()=>{
       },
       [login.fulfilled]: (state, action) => {
         state.loading = false;
-        localStorage.setItem("profile", JSON.stringify({ ...action.payload }));
+        // localStorage.setItem("profile", JSON.stringify({ ...action.payload }));
+        localStorage.setItem("userId",JSON.stringify({ ...action.payload }));
         state.user = action.payload;
         state.isLoggedIn= true;
       },

@@ -7,7 +7,7 @@ const myUser= require('../model/userModel')
 //@access    Private
 
 const getBlogs= asyncHandler(async (req,res)=>{
-    const posts= await myBlog.find({user: req.user.id}).sort({createdAt:-1})
+    const posts= await myBlog.find().populate("user").sort({createdAt:-1})
     res.status(200).json(posts)
 })
 //@desc      Get a single post(or blog)
@@ -97,14 +97,14 @@ const deleteBlog= asyncHandler(async(req,res)=>{
 //@access    Private
     // 
     const getByUserId= asyncHandler(async(req,res)=>{
-        const userId=req.params.id;
-         const    userBlogs= await myUser.findById(userId).populate('blogs');
+        const {id}=req.params;
+         const    userBlogs= await myBlog.find({user:id})
         if(!userBlogs){
             res.status(500)
     throw new Error("no Blog Found for this user")
             
         }
-        return res.status(200).json({blogs:userBlogs});
+        return res.status(200).json({userBlogs});
     
     })
 
