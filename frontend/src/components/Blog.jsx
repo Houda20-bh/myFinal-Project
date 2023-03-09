@@ -1,7 +1,6 @@
-
 import {Card,CardHeader,CardMedia,Typography, CardContent,Avatar }from '@mui/material';
 
-function Blog({title,description,imageUrl,userName}) {
+function Blog({title,description,imageURL,userName,}) {
 
   return (
     <Card sx={{ width:'40%',margin :'auto',mt:2, padding:2,
@@ -11,24 +10,22 @@ function Blog({title,description,imageUrl,userName}) {
     <CardHeader
       avatar={
         <Avatar sx={{ bgcolor: 'red' }} aria-label="recipe">
-          {userName}
+     {userName}
         </Avatar>
       }
-      title={title}
+      title= {title}
     />
     <CardMedia
       component="img"
       height="194"
-      image={imageUrl}
-      alt="Paella dish"
+      image={imageURL}
+      alt=""
     />
     <CardContent>
       <Typography variant="body2" color="text.secondary">
-        {description}
+      <b>{userName}</b> {": "} {description}
       </Typography>
     </CardContent>
-    
-    
   </Card>
   )
 }

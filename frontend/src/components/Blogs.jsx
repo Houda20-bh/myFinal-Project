@@ -1,23 +1,27 @@
 import React from 'react'
-import {useEffect, useState} from 'react'
-import { useSelector, useDispatch } from "react-redux";
-import { getAllBlogs } from '../features/blogs/blogSlice';
-import Blog from './Blog';
-function Blogs(props) {
-    const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(getAllBlogs());
-      }, [dispatch]);
-    
-      const { blogs } = useSelector((state) => state.blogs);
-    return (
-        <div>
-           
-        {blogs && blogs.map((blog)=>(<Blog
-        title={blog.title} description={blog.description} imageUrl={blog.image}
-        user={blog.user.name} key={blog.id}/>))}
-        </div>
-    )
-}
+import Blog from './Blog'
+import{useDispatch,useSelector} from 'react-redux'
+import { useEffect } from 'react'
+import { getAllBlogs } from '../Redux/blogSlice';
+function Blogs() {
+  const dispatch= useDispatch();
+  useEffect(()=>{
+    dispatch(getAllBlogs())
+  },[dispatch])
+  const{blogList}= useSelector((state)=>state.blogs)
+  return (
+    <div>
+      {blogList&&
+      blogList?.map((blog, index) => (
+          <Blog
+            title={blog.title}
+            description={blog.description}
+            imageURL={blog.image}
+          />
+        ))}
+    </div>
+  );
+};
+
 
 export default Blogs

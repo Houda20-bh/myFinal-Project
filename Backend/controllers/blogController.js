@@ -6,10 +6,22 @@ const myUser= require('../model/userModel')
 //@route     GET /api/blogs
 //@access    Private
 
-const getBlogs= asyncHandler(async (req,res)=>{
-    const posts= await myBlog.find().populate("user").sort({createdAt:-1})
-    res.status(200).json(posts)
-})
+// const getBlogs= asyncHandler(async (req,res)=>{
+//     const posts= await myBlog.find().populate("user").sort({createdAt:-1})
+//     res.status(200).json(posts)
+// })
+ const getBlogs = async (req, res, next) => {
+    let blogs;
+    try {
+      blogs = await myBlog.find();
+    } catch (err) {
+      return console.log(err);
+    }
+    if (!blogs) {
+      return res.status(404).json({ message: "No Blogs Found" });
+    }
+    return res.status(200).json(blogs);
+  };
 //@desc      Get a single post(or blog)
 //@route     GET /api/blogs/:id
 //@access    Private
@@ -31,27 +43,21 @@ const getBlog= asyncHandler(async (req,res)=>{
 //@route     POST /api/blogs
 //@access    Private
 
-const setBlog= asyncHandler(async (req,res)=>{
-    const {title,description, image,user}=req.body
-   const existUser = await myUser.findById(user)
-   if(!existUser){
-    res.status(400)
-    throw new Error('Unable to find a user')
-   }
-const post= await myBlog.create({
+const setBlog= async (req,res,next)=>{
+  const {title,description,image}=req.body
+ try{
+  const post= await myBlog.create({
     title,
     description,
-    user,
     image,
       })
-      const session = await mongoose.startSession()
-      session.startTransaction();
-      await post.save({session});
-      existUser.blogs.push(post);
-      await existUser.save({session});
-      await session.commitTransaction();
-    res.status(200).json(post)
-})
+      res.status(200).json(post);
+ } 
+ catch (err) {
+  console.log(err);
+  return res.status(500).json({ message: err });
+}
+}
 //@desc      Update a post(or blog)
 //@route     PUT /api/blogs/:id
 //@access    Private
@@ -97,14 +103,14 @@ const deleteBlog= asyncHandler(async(req,res)=>{
 //@access    Private
     // 
     const getByUserId= asyncHandler(async(req,res)=>{
-        const {id}=req.params;
-         const    userBlogs= await myBlog.find({user:id})
+        const userId=req.params.id;
+         const    userBlogs= await myUser.findById(userId).populate("blogs")
         if(!userBlogs){
             res.status(500)
     throw new Error("no Blog Found for this user")
             
         }
-        return res.status(200).json({userBlogs});
+        return res.status(200).json({user:userBlogs});
     
     })
 

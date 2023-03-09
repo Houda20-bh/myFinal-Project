@@ -2,9 +2,9 @@ import{useDispatch, useSelector} from 'react-redux'
 import { useState, useEffect } from "react";
 import { FaUser } from 'react-icons/fa'
 import { Link,useNavigate} from "react-router-dom";
-import { register } from '../features/auth/authSlice';
+import { register } from '../Redux/authSlice';
 import { toast } from 'react-toastify';
-import Spinner from '../components/Spinner';
+import Spinner from '../Components/Spinner';
 import {Box,Button,Typography,TextField,InputAdornment} from "@mui/material"
 function Register() {
     const [formValue, setFormValue] = useState({
@@ -14,7 +14,7 @@ function Register() {
         password:'',
         password2:'',
     })
-    const {loading,error}= useSelector((state) => ({...state.auth}))
+    const {loading,error}= useSelector((state) => state.auth)
     const {firstName,lastName,email,password, password2} = formValue
     const dispatch = useDispatch();
     const navigate = useNavigate();

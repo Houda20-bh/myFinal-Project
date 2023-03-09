@@ -1,22 +1,20 @@
 
-import React from 'react'
 import { useState, useEffect } from "react";
 import {FaSignInAlt } from 'react-icons/fa'
 import { Link} from "react-router-dom";
 import{useDispatch, useSelector} from"react-redux"
 import {useNavigate} from'react-router-dom';
 import {toast} from 'react-toastify';
-import { login } from '../features/auth/authSlice';
-import Spinner from '../components/Spinner';
+import { login } from '../Redux/authSlice';
+import Spinner from '../Components/Spinner';
 import {Box,Button,Typography,TextField} from "@mui/material"
 function Login() {
     const [formValue, setFormValue] = useState({
         email:'',
-        password:'',
-       
+        password:'',  
     })
     const {email,password} = formValue
-    const { loading, error } = useSelector((state) => ({ ...state.auth }));
+    const { loading, error } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate()
     useEffect(() => {

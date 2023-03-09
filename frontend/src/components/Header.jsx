@@ -1,7 +1,7 @@
 import { FaSignInAlt, FaSignOutAlt, FaUser } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import {logout} from '../features/auth/authSlice'
+import {logout} from '../Redux/authSlice'
 import {AppBar,Toolbar,Typography,Box,Button,Tabs,Tab,} from "@mui/material"
 import { useState } from 'react'
 
@@ -23,8 +23,8 @@ function Header() {
       <Typography variant='h4'> BlogsApp</Typography>
       {isLoggedIn && <Box display="flex" marginLeft={"auto"} marginRight="auto">
         <Tabs textColor='inherit' value={value} onChange={(e,val)=>setValue(val)}>
-        <Link to='/blogs'> <Tab label="All Blogs"></Tab>  </Link>
-        <Link to='/myBlogs'>  <Tab label="My Blogs"></Tab>  </Link>
+        <Link to='/blogs'> <Tab label="All Blogs">  </Tab>  </Link>
+        <Link to='/myBlogs'>  <Tab label="My Blogs"> </Tab>  </Link>
         <Link to='/blogs/add'>  <Tab label="Add Blog"></Tab>  </Link>
         </Tabs>
 

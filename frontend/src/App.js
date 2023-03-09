@@ -3,14 +3,14 @@ import { useSelector } from 'react-redux';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import AddBlog from './components/AddBlog';
-import Blog from './components/Blog';
-import Blogs from './components/Blogs';
-import Header from './components/Header';
-import UserBlogs from './components/UserBlogs';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Register from './pages/Register';
+import AddBlog from './Components/AddBlog';
+import Blog from './Components/Blog';
+import Blogs from './Components/Blogs';
+import Header from './Components/Header';
+import UserBlogs from './Components/UserBlogs';
+import Home from './Pages/Home';
+import Login from './Pages/Login';
+import Register from './Pages/Register';
 function App() {
 const {isLoggedIn }= useSelector (state=>state.auth)
   console.log(isLoggedIn);
