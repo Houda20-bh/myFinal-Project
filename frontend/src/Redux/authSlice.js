@@ -10,7 +10,7 @@ export const register = createAsyncThunk(
         "http://localhost:5000/api/users",
         formValue);
       toast.success("Registred Successfully");
-      navigate("/");
+      navigate('/login');
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -23,7 +23,7 @@ export const login = createAsyncThunk(
       try {
         const response = await axios.post("http://localhost:5000/api/users/signin",formValue);
         toast.success("Logged Successfully");
-        navigate("/");
+        navigate("/blogs");
         return response.data;
       } catch (error) {
         return rejectWithValue(error?.response?.data);
@@ -71,6 +71,7 @@ const authSlice = createSlice({
       },
       [logout.fulfilled]: (state, action) => {
         state.user = null;
+        state.isLoggedIn= false;
       },
   },
 });

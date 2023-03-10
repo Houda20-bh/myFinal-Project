@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken')
+const { validationResult } = require("express-validator");
 const bcrypt = require ('bcryptjs')
 const asyncHandler = require('express-async-handler')
 const myUser = require('../model/userModel')
-const { Error } = require('mongoose')
 
 //@desc GetAllusers
 //@route GET /api/users
@@ -19,41 +19,34 @@ const getAllusers = asyncHandler(async(req,res)=>{
 //@desc Signup a new user
 //@route POST /api/users
 //@access Public
-const signup = asyncHandler(async(req,res)=>{
-const { email, password ,firstName, lastName } = req.body
+const signup = async(req,res)=>{
+  try {
+    // validation from the req
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(402).json({ errors: errors.mapped() });
+    }
+    // Verify the existance of the account
+    const { firstName, lastName,email, password } = req.body;
 
-if (!firstName ||!lastName || !email || !password ) {
-  res.status(400)
-  throw new Error('Please add all fields')
-}
-
-// Check if user exists
-const userExists = await myUser.findOne({ email })
-
-if (userExists) {
-  res.status(400)
-  throw new Error('User already exists')
-}
-
-// Hash password
-const salt = await bcrypt.genSalt(12)
-const hashedPassword = await bcrypt.hash(password, salt)
-
-// Create user
-const user = await myUser.create({
-  email,
-  password: hashedPassword,
-  name: `${firstName} ${lastName}`,
-  blogs:[]
-})
-const token = generateToken(user._id)
-if (user) {
-  res.status(201).json({user,token})
-} else {
-  res.status(400)
-  throw new Error('Invalid user data')
-}
-})
+    const existUser= await myUser.findOne({ email });
+    if (existUser) {
+      return res.status(401).json({ message: "You have already registred" });
+    }
+    // Create new user 
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    const user = await myUser.create({
+      name: `${firstName} ${lastName}`,
+      email,
+      password: hashedPassword,
+    });
+    const token = generateToken(user._id);
+    res.status(201).json({user,token})
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+};
 // @desc    Authenticate a user
 // @route   POST /api/users/signin
 // @access  Public

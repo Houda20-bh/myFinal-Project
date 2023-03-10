@@ -18,6 +18,7 @@ const {isLoggedIn }= useSelector (state=>state.auth)
     <React.Fragment>
     <Router>
         <header>
+        <ToastContainer /> 
           <Header />
           </header>
           <main>
@@ -32,7 +33,7 @@ const {isLoggedIn }= useSelector (state=>state.auth)
            
           </Routes>
           </main>
-          <ToastContainer /> 
+         
       </Router>
     </React.Fragment>
   );

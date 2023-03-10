@@ -1,15 +1,13 @@
 
 import Spinner from '../Components/Spinner';
 import Blog from '../Components/Blog';
+import { useSelector } from 'react-redux';
 function Home() {
+  const {blog} = useSelector((state)=>state.blogs)
   return (
     <>
-  <section className='heading'>
-        <h1>Welcome</h1>
-        <p>Blogs Dashboard</p>
-      </section>
-
-      <Blog />
+        <h1><center> welcome </center></h1>
+        <Blog />
     </>
   )
 }

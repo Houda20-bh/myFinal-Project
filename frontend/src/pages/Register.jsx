@@ -5,7 +5,7 @@ import { Link,useNavigate} from "react-router-dom";
 import { register } from '../Redux/authSlice';
 import { toast } from 'react-toastify';
 import Spinner from '../Components/Spinner';
-import {Box,Button,Typography,TextField,InputAdornment} from "@mui/material"
+import {Box,Button,Typography,TextField} from "@mui/material"
 function Register() {
     const [formValue, setFormValue] = useState({
         firstName: "",
@@ -22,9 +22,8 @@ function Register() {
       error && toast.error (error)
     },[error]);
     const onChange =(e)=>{
-setFormValue((prevState)=>({
-    ...prevState,[e.target.name]:e.target.value,}))
-    } 
+      setFormValue({...formValue,[e.target.name]:e.target.value})
+    }  
     const onSubmit =(e)=>{
         e.preventDefault()
         if(password !== password2)
@@ -38,7 +37,7 @@ setFormValue((prevState)=>({
     return  (
       <>
       <form onSubmit={onSubmit}>
-        <Box width={600}
+        <Box width={400}
         display={"flex"} flexDirection="column" 
                  alignItems={'center'} justifyContent='center' 
                  boxShadow="10px 10px 20px #ccc "
@@ -55,6 +54,8 @@ setFormValue((prevState)=>({
                  name="firstName" value={firstName}
                  placeholder='Please enter your firstName'
                  label="FirstName"
+                 required
+                 fullWidth
                  onChange={onChange}/>
                 
                 
@@ -63,6 +64,8 @@ setFormValue((prevState)=>({
                  name="lastName" value={lastName}
                  placeholder='Please enter your lastName'
                  label="LastName"
+                 required
+                 fullWidth
                  onChange={onChange}/>
                 
                
@@ -71,6 +74,8 @@ setFormValue((prevState)=>({
                  name="email" value={email}
                  label="Email"
                  placeholder='Please enter your email address'
+                 required
+                 fullWidth
                  onChange={onChange}/>
                
                  
@@ -78,15 +83,19 @@ setFormValue((prevState)=>({
                  id='password'
                  name="password" value={password}
                  label="password"
-                 placeholder='Enter password'
+                 placeholder='Enter a password'
+                 required
+                 fullWidth
+                 autoFocus
                  onChange={onChange}/>
-                 
-                
                 <TextField   size="normal" margin="normal" type="password" 
                  id='password2'
                  name="password2" value={password2}
                  label="password2"
                  placeholder='Confirm your password'
+                 required
+                 fullWidth
+                 autoFocus
                  onChange={onChange}/>
                  <Button  type='submit' variant='contained' sx={{marginTop:3,borderRadius:3}} color='warning'>
                     {loading && (
@@ -96,7 +105,7 @@ setFormValue((prevState)=>({
                     tag="span"
                     className="me-2"
                   />
-                )}Submit</Button>
+                )}Sign Up</Button>
                  <Button variant='contained' sx={{borderRadius:3,marginTop:3}}> 
                       <Link to='/Login'>
                       Change to Login</Link> </Button>
