@@ -38,14 +38,14 @@ export const login = createAsyncThunk(
     return rejectWithValue(error?.response?.data);
   }}
   );
-  const userStored = localStorage.getItem("userInfos")
+  const user = localStorage.getItem("userInfos")
   ? JSON.parse(localStorage.getItem("userInfos"))
   : null;
 
 const authSlice = createSlice({
   name: "auth",
   initialState: { 
-  userLoggedIn: userStored,
+    user: user ,
   error:'',
    loading: false,
    isLoggedIn: false,
@@ -56,29 +56,31 @@ const authSlice = createSlice({
     },
     [register.fulfilled]: (state, action) => {
         state.loading = false;
-        state.userLoggedIn = action?.payload;
+        state.user = action?.payload;
         state.isLoggedIn= true;
     },
     [register.rejected]: (state, action) => {
         state.loading = false;
         state.error = action?.payload?.message;
         state.isLoggedIn= false;
+        state.user =null;
     },
     [login.pending]: (state, action) => {
         state.loading = true;
       },
       [login.fulfilled]: (state, action) => {
         state.loading = false;
-        state.userLoggedIn= action?.payload;
+        state.user= action?.payload;
         state.isLoggedIn= true;
       },
       [login.rejected]: (state, action) => {
         state.loading = false;
         state.error = action?.payload?.message;
         state.isLoggedIn= false;
+        state.user =null;
       },
       [logout.fulfilled]: (state, action) => {
-        state.userLoggedIn = null;
+        state.user= null;
         state.isLoggedIn= false;
       },
   },

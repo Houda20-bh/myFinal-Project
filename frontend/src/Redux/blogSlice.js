@@ -8,10 +8,16 @@ export const getAllBlogs = createAsyncThunk('blogs/getAll', async()=>{
     }
     catch(error){console.log(error)}
  })
- export const createBlog = createAsyncThunk("blog/create", async ({ blogData, navigate, toast }, 
-  { rejectWithValue }) => {
+ export const createBlog = createAsyncThunk("blog/create",async (payload, { rejectWithValue, getState, dispatch }) => {
+     const token = thunkAPI.getState().auth.user.token
+     const auth = getState()?.auth;
+     const {user} = auth;
+     const config = {
+       headers: { Authorization: `Bearer ${user?.token}` },
+     };
+
   try {
-    const { data } = await axios.post("http://localhost:5000/api/blogs",blogData)
+    const { data } = await axios.post("http://localhost:5000/api/blogs",blogData,config)
     toast.success("blog Added Successfully")
       navigate("/");
       return data;
@@ -20,13 +26,13 @@ export const getAllBlogs = createAsyncThunk('blogs/getAll', async()=>{
     }
   });
   export const getBlogsByuser = createAsyncThunk('user/getUserBlogs', async(userId, 
-    { rejectWithValue, getState, dispatch})=>{
-   
-          const auth = getState()?.auth
-          const {userLoggedIn} =auth;
-          const config= {
-            headers:{Authaurization:`Bearer ${userLoggedIn?.token}`}
-          };
+    { rejectWithValue, dispatch,thunkAPI})=>{
+      const token = thunkAPI.getState().auth.user.token
+      const config = {
+       headers: {
+         Authorization: `Bearer ${token}`,
+       },
+     };
 try{
     const {data} = axios.get(`http://localhost:5000/api/blogs/user/${userId}`,config)
     return data;
@@ -39,6 +45,7 @@ try{
 const blogSlice = createSlice({
     name:'blog',
     initialState:{
+      blogs:[],
     },
     extraReducers: {
         [getAllBlogs.pending]: (state, action) => {
@@ -57,7 +64,7 @@ const blogSlice = createSlice({
           },
           [createBlog.fulfilled]: (state, action) => {
             state.loading = false;
-            state.blog = action?.payload;
+            state.goals.push(action?.payload);
           },
           [createBlog.rejected]: (state, action) => {
             state.loading = false;
@@ -75,8 +82,6 @@ const blogSlice = createSlice({
             state.error = action?.payload?.message;
           },
     }
-    
-
 
 });
 

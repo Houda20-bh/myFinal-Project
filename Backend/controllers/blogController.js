@@ -34,18 +34,20 @@ const getBlog= asyncHandler(async (req,res)=>{
 //@route     POST /api/blogs
 //@access    Private
 
-const setBlog= async (req,res,next)=>{
+const setBlog= async (req,res)=>{
+  const {id} =req.user
   const {title,description,image}=req.body
  try{
   const post= await myBlog.create({
     title,
     description,
     image,
+    user:id,
       })
       res.status(200).json(post);
  } 
  catch (error) {
-  res.status(500).json({ message: error });
+  res.status(500).json(error);
 }
 }
 //@desc      Update a post(or blog)

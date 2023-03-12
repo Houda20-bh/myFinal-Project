@@ -8,7 +8,7 @@ function UserBlogs() {
   const dispatch = useDispatch();
   const {userBlogs} = useSelector((state)=>state.blogs);
   const {auth}= useSelector((state) => state.auth);
- const userId  = auth?.userLoggedIn?.userExist._id;
+ const userId  = auth?.user?._id;
  useEffect(() => {
     dispatch(getBlogsByuser(userId));
     },[dispatch]);
@@ -18,7 +18,7 @@ function UserBlogs() {
          <br></br>
           <i> {userBlogs && userBlogs?.map((blog, index) => (
           <Blog
-            title={blog.title}
+            title={blog.title} 
             description={blog.description}
             imageURL={blog.image}
           />

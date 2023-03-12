@@ -48,10 +48,15 @@ const signup = async(req,res)=>{
       email,
       password: hashedPassword,
     });
-    const token = generateToken(user._id);
-    res.status(201).json({user,token})
-  } catch (error) {
-    res.status(500).json({ message: error });
+    if (user) {
+      res.status(201).json({
+        _id: user.id,
+        name: user.name,
+        email: user.email,
+        token: generateToken(user._id),
+      })} 
+     } catch (error) {
+    res.status(500).json(error);
   }
 };
 // @desc    Authenticate a user
@@ -66,20 +71,28 @@ const signin = async (req, res) => {
     }
   // Check for user email (user exist or no)
   const {email,password}= req.body;
-  const userExist = await myUser.findOne({ email })
-     if (!userExist ){
+  const user = await myUser.findOne({ email })
+  if (user && (await bcrypt.compare(password, user.password))) {
+    res.json({
+      _id: user.id,
+      name: user.name,
+      email: user.email,
+      token: generateToken(user._id),
+    })}
+    else {
       return res.status(402).json({ message: "You have to register" });
      }
-// check password
-const isCorrectPassword = await bcrypt.compare(password,userExist.password)
-   if(!isCorrectPassword)
-   {return res.status(403).json({ message: "Invalid credentials" });}
-//Generate token for user
-const token = generateToken(userExist._id)
-   res.status(200).json({userExist,token})
-}
+// // check password
+// const isCorrectPassword = await bcrypt.compare(password,user.password)
+//    if(!isCorrectPassword)
+//    {return res.status(403).json({ message: "Invalid credentials" });}
+// //Generate token for user
+// const token = generateToken(user._id)
+//    res.status(200).json(user,token)
+// }
+    }
     catch (error) {
-      res.status(500).json({ message: error });
+      res.status(500).json(error);
     }
   };
 // })

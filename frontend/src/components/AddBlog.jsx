@@ -19,9 +19,8 @@ function AddBlog() {
   
   const onSubmit =(e)=>{
     e.preventDefault();
-    dispatch(createBlog({ blogData, navigate, toast }))
-    navigate('/');
-    
+    dispatch(createBlog({blogData, navigate, toast }))
+    navigate('/'); 
   }
   
   return (
