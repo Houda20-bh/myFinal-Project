@@ -8,8 +8,7 @@ export const getAllBlogs = createAsyncThunk('blogs/getAll', async()=>{
     }
     catch(error){console.log(error)}
  })
- export const createBlog = createAsyncThunk("blog/create",async (payload, { rejectWithValue, getState, dispatch }) => {
-     const token = thunkAPI.getState().auth.user.token
+ export const createBlog = createAsyncThunk("blog/create",async ({blogData, navigate,toast},{ rejectWithValue, getState, dispatch }) => {
      const auth = getState()?.auth;
      const {user} = auth;
      const config = {
@@ -26,11 +25,12 @@ export const getAllBlogs = createAsyncThunk('blogs/getAll', async()=>{
     }
   });
   export const getBlogsByuser = createAsyncThunk('user/getUserBlogs', async(userId, 
-    { rejectWithValue, dispatch,thunkAPI})=>{
-      const token = thunkAPI.getState().auth.user.token
+    { rejectWithValue, dispatch,getState})=>{
+      const auth = getState()?.auth;
+      const {user} = auth;
       const config = {
        headers: {
-         Authorization: `Bearer ${token}`,
+         Authorization: `Bearer ${user?.token}`,
        },
      };
 try{

@@ -14,7 +14,7 @@ const myUser= require('../model/userModel')
     return res.status(200).json(blogs);
     } 
     catch (error) {
-      res.status(500).json({ message: error });
+      res.status(500).json(error);
     }
     };  
 

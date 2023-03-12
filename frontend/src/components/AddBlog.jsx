@@ -14,13 +14,13 @@ function AddBlog() {
   imageURl:'',
   })
   const onChange =(e)=>{
- setBlogData((prevState)=>({...prevState,[e.target.name]:e.target.value}))
+ setBlogData({...blogData,[e.target.name]:e.target.value})
   }
   
   const onSubmit =(e)=>{
     e.preventDefault();
     dispatch(createBlog({blogData, navigate, toast }))
-    navigate('/'); 
+    navigate('/myblogs'); 
   }
   
   return (
