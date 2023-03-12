@@ -5,38 +5,29 @@ const myUser= require('../model/userModel')
 //@desc      Get posts(or blogs)
 //@route     GET /api/blogs
 //@access    Private
-
-// const getBlogs= asyncHandler(async (req,res)=>{
-//     const posts= await myBlog.find().populate("user").sort({createdAt:-1})
-//     res.status(200).json(posts)
-// })
- const getBlogs = async (req, res, next) => {
-    let blogs;
+ const getBlogs = async (req, res) => {
     try {
-      blogs = await myBlog.find();
-    } catch (err) {
-      return console.log(err);
-    }
-    if (!blogs) {
+     const  blogs = await myBlog.find().sort({createdAt:-1});
+     if (!blogs) {
       return res.status(404).json({ message: "No Blogs Found" });
     }
     return res.status(200).json(blogs);
-  };
+    } 
+    catch (error) {
+      res.status(500).json({ message: error });
+    }
+    };  
+
 //@desc      Get a single post(or blog)
 //@route     GET /api/blogs/:id
 //@access    Private
 
 const getBlog= asyncHandler(async (req,res)=>{
-    const {id}= req.params
-    if(!mongoose.Types.ObjectId.isValid(id))
-    { res.status(400)
-        throw new Error('no such a blog')}
+        const id = req.params.id
         const post = await myBlog.findById(id)
         if(!post)
-        {
-            res.status(400)
-            throw new Error('no such a blog') 
-        }
+        { res.status(400)
+            throw new Error('no such a blog') }
     res.status(200).json(post)
 })
 //@desc      Create a post(or blog)
@@ -53,9 +44,8 @@ const setBlog= async (req,res,next)=>{
       })
       res.status(200).json(post);
  } 
- catch (err) {
-  console.log(err);
-  return res.status(500).json({ message: err });
+ catch (error) {
+  res.status(500).json({ message: error });
 }
 }
 //@desc      Update a post(or blog)
@@ -102,7 +92,7 @@ const deleteBlog= asyncHandler(async(req,res)=>{
 //@route     GET /api/blogs/user/:id
 //@access    Private
     // 
-    const getByUserId= asyncHandler(async(req,res)=>{
+    const getByUser= asyncHandler(async(req,res)=>{
         const userId=req.params.id;
          const    userBlogs= await myUser.findById(userId).populate("blogs")
         if(!userBlogs){
@@ -120,5 +110,5 @@ module.exports={
     setBlog,
     updateBlog,
     deleteBlog,
-    getByUserId,
+    getByUser,
 }

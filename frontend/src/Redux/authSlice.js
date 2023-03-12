@@ -21,23 +21,32 @@ export const login = createAsyncThunk(
     "auth/login",
     async ({ formValue, navigate,toast }, { rejectWithValue }) => {
       try {
-        const response = await axios.post("http://localhost:5000/api/users/signin",formValue);
+        const {data} = await axios.post("http://localhost:5000/api/users/signin",formValue);
+        localStorage.setItem("userInfos", JSON.stringify(data));
         toast.success("Logged Successfully");
         navigate("/blogs");
-        return response.data;
+        return data;
       } catch (error) {
         return rejectWithValue(error?.response?.data);
       }
     }
   );
-  export const logout = createAsyncThunk("auth/logout",async()=>{
-    localStorage.removeItem('user')})
+  export const logout = createAsyncThunk("auth/logout",async({ rejectWithValue })=>{
+   try{
+    await localStorage.removeItem("userInfos");
+  } catch (error) {
+    return rejectWithValue(error?.response?.data);
+  }}
+  );
+  const userStored = localStorage.getItem("userInfos")
+  ? JSON.parse(localStorage.getItem("userInfos"))
+  : null;
 
 const authSlice = createSlice({
   name: "auth",
   initialState: { 
-    user: null,
-    error:'',
+  userLoggedIn: userStored,
+  error:'',
    loading: false,
    isLoggedIn: false,
   },
@@ -47,12 +56,12 @@ const authSlice = createSlice({
     },
     [register.fulfilled]: (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.userLoggedIn = action?.payload;
         state.isLoggedIn= true;
     },
     [register.rejected]: (state, action) => {
         state.loading = false;
-        state.error = action.payload.message;
+        state.error = action?.payload?.message;
         state.isLoggedIn= false;
     },
     [login.pending]: (state, action) => {
@@ -60,17 +69,16 @@ const authSlice = createSlice({
       },
       [login.fulfilled]: (state, action) => {
         state.loading = false;
-        state.user = action.payload;
-        localStorage.setItem("userInfos", JSON.stringify({ ...action.payload }));
+        state.userLoggedIn= action?.payload;
         state.isLoggedIn= true;
       },
       [login.rejected]: (state, action) => {
         state.loading = false;
-        state.error = action.payload.message;
+        state.error = action?.payload?.message;
         state.isLoggedIn= false;
       },
       [logout.fulfilled]: (state, action) => {
-        state.user = null;
+        state.userLoggedIn = null;
         state.isLoggedIn= false;
       },
   },

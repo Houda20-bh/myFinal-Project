@@ -1,21 +1,28 @@
 const jwt = require('jsonwebtoken')
 const { validationResult } = require("express-validator");
-const bcrypt = require ('bcryptjs')
-const asyncHandler = require('express-async-handler')
+const bcrypt = require ('bcryptjs');
 const myUser = require('../model/userModel')
 
 //@desc GetAllusers
 //@route GET /api/users
 //@access Public
-const getAllusers = asyncHandler(async(req,res)=>{
+const getAllusers = async(req,res)=>{
+  try {
+    // validation from the req
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(402).json({ errors: errors.mapped() });
+    }
   const users= await myUser.find();
-  
   if (!users) {
-    res.status(400)
-    throw new Error('No users found')
+    return res.status(402).json({ message: "No users found" });
   }
-  res.status(200).json({users})
-})
+  res.status(200).json(users)
+}
+catch (error) {
+  res.status(500).json({ message: error });
+}
+};
 //@desc Signup a new user
 //@route POST /api/users
 //@access Public
@@ -50,33 +57,52 @@ const signup = async(req,res)=>{
 // @desc    Authenticate a user
 // @route   POST /api/users/signin
 // @access  Public
-const signin = asyncHandler(async (req, res) => {
-  const { email, password } = req.body
-
-  // Check for user email
-  const user = await myUser.findOne({ email })
-   if (!user){
-    res.status(404)
-  throw new Error('User does not exists')
-   }
-  if (user && (await bcrypt.compare(password, user.password))) {
-    const token = generateToken(user._id)
-    res.json({user,token})
-  } else {
-    res.status(400)
-    throw new Error('Invalid credentials')
-  }
-})
+const signin = async (req, res) => {
+  try {
+    // validation from the req
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(402).json({ errors: errors.mapped() });
+    }
+  // Check for user email (user exist or no)
+  const {email,password}= req.body;
+  const userExist = await myUser.findOne({ email })
+     if (!userExist ){
+      return res.status(402).json({ message: "You have to register" });
+     }
+// check password
+const isCorrectPassword = await bcrypt.compare(password,userExist.password)
+   if(!isCorrectPassword)
+   {return res.status(403).json({ message: "Invalid credentials" });}
+//Generate token for user
+const token = generateToken(userExist._id)
+   res.status(200).json({userExist,token})
+}
+    catch (error) {
+      res.status(500).json({ message: error });
+    }
+  };
+// })
 // @desc    Get user data
 // @route   GET /api/users/me
 // @access  Private
-const getme = asyncHandler(async (req, res) => {
+const getme = async (req, res) => {
+  try {
+    // validation from the req
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(402).json({ errors: errors.mapped() });
+    }
   res.status(200).json(req.user)
-})
+}
+catch (error) {
+  res.status(500).json({ message: error });
+}
+};
 
 // Generate JWT
 const generateToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET, {
+    return jwt.sign({id}, process.env.JWT_SECRET, {
       expiresIn: '30d',})
   }
   

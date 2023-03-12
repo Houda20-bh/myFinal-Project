@@ -3,11 +3,17 @@ import Spinner from '../Components/Spinner';
 import Blog from '../Components/Blog';
 import { useSelector } from 'react-redux';
 function Home() {
-  const {blog} = useSelector((state)=>state.blogs)
+  // const {userExist } = useSelector((state) => state.auth.userLoggedIn);
+  const {auth}= useSelector((state) => state);
+ 
   return (
     <>
-        <h1><center> welcome </center></h1>
-        <Blog />
+       <center> 
+         <br></br>
+          <i> {auth?.userLoggedIn?.userExist
+          ? `Welcome ${auth?.userLoggedIn?.userExist.name}`: "Eveyone"} </i>
+          </center>
+       <Blog />
     </>
   )
 }

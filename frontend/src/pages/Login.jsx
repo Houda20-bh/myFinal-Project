@@ -13,29 +13,22 @@ function Login() {
         email:'',
         password:'',  
     })
-    const {email,password} = formValue
     const { loading, error } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate()
     useEffect(() => {
-      error && toast.error(error);
-    },[]);
-  
-    
+      toast.error(error);
+    },[error]);
     const onChange =(e)=>{
       setFormValue({...formValue,[e.target.name]:e.target.value})
     } 
     const onSubmit =(e)=>{
         e.preventDefault()
-        if(email && password){
           dispatch (login({formValue,navigate,toast}))
-        }
-      
     }
     return  (
         <>
-        <form onSubmit={onSubmit}>
-        <Box  maxWidth={400}
+        <Box  maxWidth={400} component= "form" onSubmit={onSubmit}
         display={"flex"} flexDirection="column" 
                  alignItems={'center'} justifyContent='center' 
                  boxShadow="10px 10px 20px #ccc "
@@ -50,14 +43,14 @@ function Login() {
                   required
                   fullWidth
                  id='email'
-                 name="email" value={email}
+                 name="email" 
                  label="Email"
                  autoComplete="Email"
                  autoFocus
                  onChange={onChange}/>
                <TextField  margin="normal"type="password" 
                  id='password'
-                 name="password" value={password}
+                 name="password" 
                  label="password"
                  placeholder='Enter a password'
                  required
@@ -76,12 +69,10 @@ function Login() {
                   />
                 )}
                       login</Button>
-                      <Button variant='contained' sx={{marginTop:3,borderRadius:3}}> 
+                      <Button  type="submit" variant='contained' sx={{marginTop:3,borderRadius:3}}> 
                       <Link to='/register'>
                       Change to Signup </Link> </Button>
-                      </Box>  
-            </form>
-  
+                      </Box>
         </>
       );
 }

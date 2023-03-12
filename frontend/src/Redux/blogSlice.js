@@ -8,7 +8,8 @@ export const getAllBlogs = createAsyncThunk('blogs/getAll', async()=>{
     }
     catch(error){console.log(error)}
  })
- export const createBlog = createAsyncThunk("blog/create", async ({ blogData, navigate, toast }, { rejectWithValue }) => {
+ export const createBlog = createAsyncThunk("blog/create", async ({ blogData, navigate, toast }, 
+  { rejectWithValue }) => {
   try {
     const { data } = await axios.post("http://localhost:5000/api/blogs",blogData)
     toast.success("blog Added Successfully")
@@ -18,9 +19,27 @@ export const getAllBlogs = createAsyncThunk('blogs/getAll', async()=>{
       return rejectWithValue(err.response.data);
     }
   });
+  export const getBlogsByuser = createAsyncThunk('user/getUserBlogs', async(userId, 
+    { rejectWithValue, getState, dispatch})=>{
+   
+          const auth = getState()?.auth
+          const {userLoggedIn} =auth;
+          const config= {
+            headers:{Authaurization:`Bearer ${userLoggedIn?.token}`}
+          };
+try{
+    const {data} = axios.get(`http://localhost:5000/api/blogs/user/${userId}`,config)
+    return data;
+}
+    catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  });
+
 const blogSlice = createSlice({
     name:'blog',
-    initialState:{},
+    initialState:{
+    },
     extraReducers: {
         [getAllBlogs.pending]: (state, action) => {
             state.loading = true;
@@ -44,7 +63,19 @@ const blogSlice = createSlice({
             state.loading = false;
             state.error = action.payload.message;
           },
+          [getBlogsByuser.pending]: (state, action) => {
+            state.loading = true;
+          },
+          [getBlogsByuser.fulfilled]: (state, action) => {
+            state.loading = false;
+            state.userBlogs= action?.payload;
+          },
+          [getBlogsByuser.rejected]: (state, action) => {
+            state.loading = false;
+            state.error = action?.payload?.message;
+          },
     }
+    
 
 
 });
