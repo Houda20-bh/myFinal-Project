@@ -17,6 +17,7 @@ function Blogs() {
             title={blog.title}
             description={blog.description}
             imageURL={blog.image}
+            userName={blog.user.name}
           />
         ))}
     </div>

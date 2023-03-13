@@ -34,7 +34,7 @@ const signup = async(req,res)=>{
       return res.status(402).json({ errors: errors.mapped() });
     }
     // Verify the existance of the account
-    const { firstName, lastName,email, password } = req.body;
+    const { firstName, lastName,email, password,blogs } = req.body;
 
     const existUser= await myUser.findOne({ email });
     if (existUser) {
@@ -47,12 +47,14 @@ const signup = async(req,res)=>{
       name: `${firstName} ${lastName}`,
       email,
       password: hashedPassword,
+      blogs:[],
     });
     if (user) {
       res.status(201).json({
         _id: user.id,
         name: user.name,
         email: user.email,
+        blogs: user.blogs,
         token: generateToken(user._id),
       })} 
      } catch (error) {
@@ -74,9 +76,11 @@ const signin = async (req, res) => {
   const user = await myUser.findOne({ email })
   if (user && (await bcrypt.compare(password, user.password))) {
     res.json({
+      // message:'login successfull',user
       _id: user.id,
       name: user.name,
       email: user.email,
+      blogs : user.blogs,
       token: generateToken(user._id),
     })}
     else {

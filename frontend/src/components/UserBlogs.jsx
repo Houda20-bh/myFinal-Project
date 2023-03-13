@@ -6,12 +6,14 @@ import Blog from './Blog';
 
 function UserBlogs() {
   const dispatch = useDispatch();
-  const {userBlogs} = useSelector((state)=>state.blogs);
-  const {auth}= useSelector((state) => state.auth);
- const userId  = auth?.user?._id;
+  const {user}= useSelector((state) => state.auth);
+  const {userBlogs}= useSelector((state) => state.blogs);
+ const userId  = user?._id;
+ console.log(userBlogs);
  useEffect(() => {
     dispatch(getBlogsByuser(userId));
-    },[dispatch]);
+    },[]);
+ console.log(userBlogs);
   return (
     <div>
       <center> 

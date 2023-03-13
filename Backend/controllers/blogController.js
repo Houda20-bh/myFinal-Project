@@ -7,7 +7,7 @@ const myUser= require('../model/userModel')
 //@access    Private
  const getBlogs = async (req, res) => {
     try {
-     const  blogs = await myBlog.find().sort({createdAt:-1});
+     const  blogs = await myBlog.find().populate("user").sort({createdAt:-1});
      if (!blogs) {
       return res.status(404).json({ message: "No Blogs Found" });
     }
@@ -96,7 +96,7 @@ const deleteBlog= asyncHandler(async(req,res)=>{
     // 
     const getByUser= asyncHandler(async(req,res)=>{
         const userId=req.params.id;
-         const    userBlogs= await myUser.findById(userId).populate("blogs")
+         const userBlogs= await myUser.findById(userId).populate("blogs")
         if(!userBlogs){
             res.status(500)
     throw new Error("no Blog Found for this user")

@@ -8,7 +8,7 @@ export const getAllBlogs = createAsyncThunk('blogs/getAll', async()=>{
     }
     catch(error){console.log(error)}
  })
- export const createBlog = createAsyncThunk("blog/create",async ({blogData, navigate,toast},{ rejectWithValue, getState, dispatch }) => {
+ export const createBlog = createAsyncThunk("blog/create",async ({blogData, navigate, toast },{ rejectWithValue,getState, dispatch }) => {
      const auth = getState()?.auth;
      const {user} = auth;
      const config = {
@@ -24,8 +24,8 @@ export const getAllBlogs = createAsyncThunk('blogs/getAll', async()=>{
       return rejectWithValue(err.response.data);
     }
   });
-  export const getBlogsByuser = createAsyncThunk('user/getUserBlogs', async(userId, 
-    { rejectWithValue, dispatch,getState})=>{
+  export const getBlogsByuser = createAsyncThunk('user/getUserBlogs', async(id, 
+    { rejectWithValue,getState})=>{
       const auth = getState()?.auth;
       const {user} = auth;
       const config = {
@@ -34,7 +34,7 @@ export const getAllBlogs = createAsyncThunk('blogs/getAll', async()=>{
        },
      };
 try{
-    const {data} = axios.get(`http://localhost:5000/api/blogs/user/${userId}`,config)
+    const {data} = axios.get(`http://localhost:5000/api/blogs/user/${id}`,config)
     return data;
 }
     catch (err) {
@@ -45,7 +45,6 @@ try{
 const blogSlice = createSlice({
     name:'blog',
     initialState:{
-      blogs:[],
     },
     extraReducers: {
         [getAllBlogs.pending]: (state, action) => {
@@ -64,7 +63,8 @@ const blogSlice = createSlice({
           },
           [createBlog.fulfilled]: (state, action) => {
             state.loading = false;
-            state.goals.push(action?.payload);
+            state.userBlog= action?.payload;
+           
           },
           [createBlog.rejected]: (state, action) => {
             state.loading = false;
@@ -75,7 +75,7 @@ const blogSlice = createSlice({
           },
           [getBlogsByuser.fulfilled]: (state, action) => {
             state.loading = false;
-            state.userBlogs= action?.payload;
+            state.userBlogs=action?.payload;
           },
           [getBlogsByuser.rejected]: (state, action) => {
             state.loading = false;
