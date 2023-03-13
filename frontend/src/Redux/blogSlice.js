@@ -41,10 +41,36 @@ try{
       return rejectWithValue(err.response.data);
     }
   });
+  export const updateBlog = createAsyncThunk('blog/update',async({blogData,id, navigate, toast},{rejectWithValue,getState})=>{
+    const auth = getState()?.auth;
+    const {user} = auth;
+    const config = {
+      headers: { Authorization: `Bearer ${user?.token}` },
+    };
+    try{
+      const { data } = await axios.put(`http://localhost:5000/api/blogs/${id}`,blogData,config)
+      navigate(`myBlogs/${id}`);
+      toast.success("blog updated Successfully")
+        return data;
+}
+ catch (err) {
+  return rejectWithValue(err.response.data);
+}
+
+
+  })
 
 const blogSlice = createSlice({
     name:'blog',
     initialState:{
+      isEdited :false,
+    },
+    reducers: {
+      EditBlog: (state, action) => {
+        state.blogList.map((el) =>
+          el._id === action.payload ? (el.isEdited = !el.isEdited) : el.isEdited
+        );
+      },
     },
     extraReducers: {
         [getAllBlogs.pending]: (state, action) => {
@@ -81,8 +107,21 @@ const blogSlice = createSlice({
             state.loading = false;
             state.error = action?.payload?.message;
           },
+          [updateBlog.pending]: (state, action) => {
+            state.loading = true;
+          },
+          [updateBlog.fulfilled]: (state, action) => {
+            state.loading = false;
+            state.updatedBlog= action?.payload;
+           
+          },
+          [updateBlog.rejected]: (state, action) => {
+            state.loading = false;
+            state.error = action.payload.message;
+          },
     }
 
 });
 
 export default blogSlice.reducer;
+export const { EditBlog } = blogSlice.actions;

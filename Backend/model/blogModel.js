@@ -12,6 +12,7 @@ const blogSchema= mongoose.Schema({
     type: String,
     required: true,
   },
+  isEdited:Boolean,
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",

@@ -5,6 +5,7 @@ import {Typography,Box,Button, InputLabel, TextField,} from "@mui/material"
 import { createBlog } from '../Redux/blogSlice';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+const labelStyles = { mb: 1, mt: 2, fontSize: "24px", fontWeight: "bold" };
 function AddBlog() {
   const dispatch = useDispatch();
   const navigate = useNavigate()
@@ -32,11 +33,12 @@ function AddBlog() {
         display="flex" flexDirection={'column'} width={'80%'}>
           <Typography fontWeight={'bold'} padding={3} color="grey" variant='h4'
           textAlign={'center'}> Post your Blog</Typography>
-          <InputLabel sx={{mb:1,mt:2, fontSize:'24px', fontWeight:'bold'}}  onChange={onChange}> Title </InputLabel>
+          
+          <InputLabel sx={{mb:1,mt:2, fontSize:'24px', fontWeight:'bold',labelStyles}}  onChange={onChange}> Title </InputLabel>
           <TextField name='title' onChange={onChange}  margin='normal' variant='outlined'/>
-          <InputLabel sx={{mb:1,mt:2, fontSize:'24px', fontWeight:'bold'}}> Description</InputLabel>
+          <InputLabel sx={{mb:1,mt:2, fontSize:'24px', fontWeight:'bold',labelStyles}}> Description</InputLabel>
           <TextField name='description' onChange={onChange}   margin='normal' variant='outlined'/>
-          <InputLabel sx={{mb:1,mt:2, fontSize:'24px', fontWeight:'bold'}}> ImageURL</InputLabel>
+          <InputLabel sx={{mb:1,mt:2, fontSize:'24px', fontWeight:'bold',labelStyles}}> ImageURL</InputLabel>
           <TextField name='image' onChange={onChange} margin='normal' variant='outlined'/>
           <Button variant='contained' sx={{margin:1,borderRadius:10}} color='warning' type='submit'>  Submit
           </Button>

@@ -14,7 +14,8 @@ function Blogs() {
       {blogList&&
       blogList?.map((blog, index) => (
           <Blog
-            title={blog.title}
+          id={blog._id}
+          title={blog.title}
             description={blog.description}
             imageURL={blog.image}
             userName={blog.user.name}

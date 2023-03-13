@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AddBlog from './Components/AddBlog';
-import Blog from './Components/Blog';
+import BlogDetail from './Components/BlogDetail';
 import Blogs from './Components/Blogs';
 import Header from './Components/Header';
 import UserBlogs from './Components/UserBlogs';
@@ -29,7 +29,7 @@ const {isLoggedIn }= useSelector (state=>state.auth)
             <Route path='/blogs' element={<Blogs />} />
             <Route path='/blogs/add' element={<AddBlog />} />
             <Route path='/myBlogs' element={<UserBlogs />} />
-            <Route path='/myBlogs/:id' element={<Blog />} />
+            <Route path='/myBlogs/:id' element={<BlogDetail />} />
            
           </Routes>
           </main>
