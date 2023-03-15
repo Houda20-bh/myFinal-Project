@@ -6,21 +6,20 @@ import Blog from './Blog';
 function UserBlogs() {
   const dispatch = useDispatch();
   const {user}= useSelector((state) => state.auth);
- const userId  = user?._id;
- 
+  const id= user._id;
  useEffect(() => {
-    dispatch(getBlogsByuser(userId));
+    dispatch(getBlogsByuser({id}));
     },[]);
   return (
     <div>
       <center> 
          <br></br>
-          <i> {user && user.blogs && user.blogs?.map((blog, index) => (
+          <i> {user&& user.blogs && user.blogs?.map((blog, index) => (
           <Blog
             title={blog.title} 
             description={blog.description}
-            imageURL={blog.image}
-            userName={user.name}
+            image={blog.image}
+          
           />
         ))
           } </i>

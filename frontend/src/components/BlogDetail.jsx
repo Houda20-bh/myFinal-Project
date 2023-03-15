@@ -1,30 +1,29 @@
 
+import React, {useState } from "react";
+import { updateBlog } from '../Redux/blogSlice';
 import {useDispatch} from 'react-redux';
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { EditBlog } from '../Redux/blogSlice';
+import {EditBlog} from '../Redux/blogSlice';
 import {  Box,Button, InputLabel, TextField, Typography } from "@mui/material";
 const labelStyles = { mb: 1, mt: 2, fontSize: "24px", fontWeight: "bold" };
-function BlogDetail() {
-const navigate = useNavigate();
-const id = useParams().id;
+function BlogDetail({blog}) {
+  const dispatch=useDispatch();
 const [inputs, setInputs] = useState({});
   const handleChange = (e) => {
-    setInputs((prevState) => ({
-      ...prevState,
+   setInputs(({...inputs,
       [e.target.name]: e.target.value,
     }));
   };
-  const dispatch = useDispatch();
-  const handleSubmit = (e) => {
+  const updateHandler =(e)=>{
     e.preventDefault();
-    dispatch(EditBlog({title: inputs.title,
-        description: inputs.description,}));
+    dispatch(updateBlog({id:blog._id,title:inputs.title,description:inputs.description}))
   };
+  const cancelHandler =(e)=>{
+    e.preventDefault();
+    dispatch(EditBlog (blog._id));
+  }
     return (
          <div>
-      {inputs && (
-        <form onSubmit={handleSubmit}>
+        <form>
           <Box
             border={3}
             borderColor="linear-gradient(90deg, rgba(58,75,180,1) 2%, rgba(116,49,110,1) 36%, rgba(2,0,161,1) 73%, rgba(69,92,252,1) 100%)"
@@ -44,13 +43,12 @@ const [inputs, setInputs] = useState({});
               variant="h2"
               textAlign={"center"}
             >
-              Post Your Blog
+             You can Edit your post
             </Typography>
             <InputLabel sx={labelStyles}>Title</InputLabel>
             <TextField
               name="title"
               onChange={handleChange}
-              value={inputs.title}
               margin="auto"
               variant="outlined"
             />
@@ -58,7 +56,6 @@ const [inputs, setInputs] = useState({});
             <TextField
               name="description"
               onChange={handleChange}
-              value={inputs.description}
               margin="auto"
               variant="outlined"
             />
@@ -67,13 +64,21 @@ const [inputs, setInputs] = useState({});
               sx={{ mt: 2, borderRadius: 4 }}
               variant="contained"
               color="warning"
-              type="submit"
+             onClick={updateHandler}
             >
-              Submit
+             update
+            </Button>
+            <Button
+              sx={{ mt: 2, borderRadius: 4 }}
+              variant="contained"
+              color="warning"
+              onClick={cancelHandler}
+            >
+             Cancel
             </Button>
           </Box>
         </form>
-      )}
+
     </div>
     )
 }

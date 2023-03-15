@@ -9,15 +9,17 @@ function Blogs() {
     dispatch(getAllBlogs())
   },[dispatch])
   const{blogList}= useSelector((state)=>state.blogs)
+  console.log(blogList);
   return (
     <div>
-      {blogList&&
+      {blogList &&
       blogList?.map((blog, index) => (
           <Blog
           id={blog._id}
           title={blog.title}
-            description={blog.description}
-            imageURL={blog.image}
+          description={blog.description}
+          image={blog.image}
+
             userName={blog.user.name}
           />
         ))}

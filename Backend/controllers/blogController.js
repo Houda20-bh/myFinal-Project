@@ -42,7 +42,8 @@ const setBlog= async (req,res)=>{
     title,
     description,
     image,
-    user:id,
+    user: req.user.id,
+    isEdited:false,
       })
       res.status(200).json(post);
  } 
@@ -95,14 +96,15 @@ const deleteBlog= asyncHandler(async(req,res)=>{
 //@access    Private
     // 
     const getByUser= asyncHandler(async(req,res)=>{
-        const userId=req.params.id;
-         const userBlogs= await myUser.findById(userId).populate("blogs")
+        // const {id}=req.user;
+        const userBlogs = await myBlog.find(({ user: req.user.id }))
+        //  const userBlogs= await myUser.findById(id).populate("blogs")
         if(!userBlogs){
             res.status(500)
     throw new Error("no Blog Found for this user")
             
         }
-        return res.status(200).json({user:userBlogs});
+        return res.status(200).json(userBlogs);
     
     })
 

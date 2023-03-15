@@ -13,7 +13,7 @@ function Header() {
  const [value,setValue]= useState()
   const onLogout = () => {
     dispatch(logout())
-    navigate('/login')
+    navigate('/')
   }
 
   return (

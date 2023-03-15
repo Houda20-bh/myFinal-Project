@@ -1,6 +1,6 @@
 
 import Spinner from '../Components/Spinner';
-import Blog from '../Components/Blog';
+// import Blog from '../Components/Blog';
 import { useSelector } from 'react-redux';
 function Home() {
  
@@ -13,7 +13,7 @@ function Home() {
           <i> {auth?.user
           ? `Welcome ${auth?.user.name}`: "Eveyone"} </i>
           </center>
-       <Blog />
+   
     </>
   )
 }

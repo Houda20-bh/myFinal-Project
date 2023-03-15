@@ -13,10 +13,10 @@ const blogSchema= mongoose.Schema({
     required: true,
   },
   isEdited:Boolean,
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'User',
+    },
 },{timestamps: true,})
 module.exports= mongoose.model('Blog',blogSchema)
