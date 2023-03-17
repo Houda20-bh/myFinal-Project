@@ -4,7 +4,7 @@ import { FaUser } from 'react-icons/fa'
 import { Link,useNavigate} from "react-router-dom";
 import { register } from '../Redux/authSlice';
 import { toast } from 'react-toastify';
-import Spinner from '../Components/Spinner';
+import Spinner from "../Components/Spinner"
 import {Box,Button,Typography,TextField} from "@mui/material"
 function Register() {
     const [formValue, setFormValue] = useState({

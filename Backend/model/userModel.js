@@ -1,22 +1,33 @@
-const mongoose = require('mongoose')
-const userSchema = mongoose.Schema({
-    name:{
-        type:String,
-        required:[true,'please add a name']
+const mongoose = require("mongoose");
+const userSchema = mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: [true, "please add a name"],
     },
-    email:{
-        type:String,
-        required:[true,'please add an email'],
-        unique: true,
+    email: {
+      type: String,
+      required: [true, "please add an email"],
+      unique: true,
     },
-    password:{
-        type:String,
-        required:[true,'please add a password'],
+    password: {
+      type: String,
+      required: [true, "please add a password"],
     },
-    blogs:[
-        {type: mongoose.Types.ObjectId,
-         ref:'Blog',
-        required:true}
-    ]
-},{timestamps:true})
-module.exports= mongoose.model('User',userSchema)
+  },
+  {
+    toJSON: {
+      virtuals: true,
+    },
+    toObject: {
+      virtuals: true,
+    },
+    timestamps: true,
+  }
+);
+userSchema.virtual("blogs", {
+  ref: "Blog",
+  foreignField: "user",
+  localField: "_id",
+});
+module.exports = mongoose.model("User", userSchema);

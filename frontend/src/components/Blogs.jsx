@@ -9,23 +9,20 @@ function Blogs() {
     dispatch(getAllBlogs())
   },[dispatch])
   const{blogList}= useSelector((state)=>state.blogs)
+  const {auth}= useSelector((state) => state);
   console.log(blogList);
   return (
     <div>
       {blogList &&
       blogList?.map((blog, index) => (
           <Blog
-          id={blog._id}
           title={blog.title}
           description={blog.description}
           image={blog.image}
-
-            userName={blog.user.name}
+          userName={blog.user.name}
           />
         ))}
     </div>
   );
 };
-
-
-export default Blogs
+export default Blogs;

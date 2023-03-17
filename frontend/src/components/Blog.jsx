@@ -6,17 +6,15 @@ import {deleteBlog, EditBlog} from '../Redux/blogSlice';
 import BlogDetail from './BlogDetail';
 const labelStyles = { mb: 1, mt: 2, fontSize: "24px", fontWeight: "bold" };
 function Blog({title,description,image,userName,isEdited,_id}) {
+  // const {auth}= useSelector((state) => state);
+
+
   const dispatch= useDispatch();
-  // e.preventDefault();
-  // const editHandler = (e) => {
-  //   e.preventDefault();
-  //   dispatch(EditBlog (_id));
-  // };
+
   const handleDelete=(e)=>{
     e.preventDefault();
     dispatch(deleteBlog(_id))
   }
-  console.log(isEdited);
   return (
     <Card sx={{ width:'40%',margin :'auto',mt:2, padding:2,
     boxShadow:'5px 5px 10px #ccc',
@@ -45,8 +43,7 @@ function Blog({title,description,image,userName,isEdited,_id}) {
     />
     <CardContent>
       <Typography variant="body2" color="text.secondary">
-      <b>{userName}</b> {": "} 
-      {description}
+      <b>{userName}</b> {": "} {description}
       </Typography>
     </CardContent>
   </Card>

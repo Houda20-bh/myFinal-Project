@@ -21,7 +21,7 @@ function Header() {
        sx={{background:'linear-gradient(90deg, rgba(30,0,36,1) 0%, rgba(76,56,241,1) 35%, rgba(200,59,200,1) 100%);'}}>
      <Toolbar>
       <Typography variant='h4'> BlogsApp</Typography>
-      {isLoggedIn && <Box display="flex" marginLeft={"auto"} marginRight="auto">
+      {user && <Box display="flex" marginLeft={"auto"} marginRight="auto">
         <Tabs textColor='inherit' value={value} onChange={(e,val)=>setValue(val)}>
         <Link to='/blogs'> <Tab label="All Blogs">  </Tab>  </Link>
         <Link to='/myBlogs'>  <Tab label="My Blogs"> </Tab>  </Link>
@@ -30,10 +30,10 @@ function Header() {
 
       </Box>}
       <Box display="flex"  marginLeft='auto'>
-            {isLoggedIn && <Button onClick={onLogout} variant='contained' sx={{margin:1,borderRadius:10}} color='warning' >
+            {user && <Button onClick={onLogout} variant='contained' sx={{margin:1,borderRadius:10}} color='warning' >
               <FaSignOutAlt /> Logout
             </Button>}
-          {!isLoggedIn && <>
+          {!user && <>
             <Button variant='contained' sx={{margin:1,borderRadius:10}} color='warning'>
               <Link to='/login'>
                 <FaSignInAlt /> Login

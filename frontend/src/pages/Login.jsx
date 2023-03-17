@@ -6,7 +6,7 @@ import{useDispatch, useSelector} from"react-redux"
 import {useNavigate} from'react-router-dom';
 import {toast} from 'react-toastify';
 import { login } from '../Redux/authSlice';
-import Spinner from '../Components/Spinner';
+import Spinner from "../Components/Spinner"
 import {Box,Button,Typography,TextField} from "@mui/material"
 function Login() {
     const [formValue, setFormValue] = useState({
@@ -16,9 +16,6 @@ function Login() {
     const { loading, error } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate()
-    useEffect(() => {
-      toast.error(error);
-    },[error]);
     const onChange =(e)=>{
       setFormValue({...formValue,[e.target.name]:e.target.value})
     } 
