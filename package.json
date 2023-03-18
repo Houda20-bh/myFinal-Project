@@ -12,6 +12,7 @@
   "author": "Houda Hattab",
   "license": "MIT",
   "dependencies": {
+    "@mui/styles": "^5.11.13",
     "bcryptjs": "^2.4.3",
     "colors": "^1.4.0",
     "cors": "^2.8.5",

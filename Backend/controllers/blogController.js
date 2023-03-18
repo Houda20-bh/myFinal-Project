@@ -45,7 +45,7 @@ const setBlog = async (req, res) => {
       user: id,
       isEdited: false,
     });
-    res.status(200).json(post);
+    res.status(200).json({post});
   } catch (error) {
     res.status(500).json(error);
   }
@@ -54,19 +54,25 @@ const setBlog = async (req, res) => {
 //@route     PUT /api/blogs/:id
 //@access    Private
 
-const updateBlog = asyncHandler(async (req, res) => {
+const updateBlog = async (req, res) => {
+  const { id } = req.params;
+  const{title,description}=req.body;
   try {
-    const { id } = req.params;
-    const updatedBlog = await myBlog.findByIdAndUpdate(
+    const updatedBlog ={
+      title:title,
+      description:description,
+      _id:id,
+    }
+     await myBlog.findByIdAndUpdate(
       id,
-      { ...req.body },
+      {updatedBlog},
       { new: true }
     );
     res.status(200).json(updatedBlog);
   } catch (error) {
     res.status(500).json(error);
   }
-});
+};
 //@desc      Delete a post(or blog)
 //@route    DELETE /api/blogs/:id
 //@access    Private
@@ -74,8 +80,8 @@ const updateBlog = asyncHandler(async (req, res) => {
 const deleteBlog = asyncHandler(async (req, res) => {
   try {
     const { id } = req.params;
-    const deletedBlog = await myBlog.findByIdAndRemove(id);
-    res.json(deletedBlog);
+    await myBlog.findByIdAndRemove(id);
+    res.json({message:'blog deleted successfuly'});
   } catch (error) {
     res.status(500).json(error);
   }

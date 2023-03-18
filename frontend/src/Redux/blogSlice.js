@@ -37,7 +37,7 @@ export const createBlog = createAsyncThunk(
 
 export const updateBlog = createAsyncThunk(
   "blog/update",
-  async ({ inputs, id, navigate, toast }, { rejectWithValue, getState }) => {
+  async ({id,updatedBlog, navigate, toast} , { rejectWithValue, getState }) => {
     const auth = getState()?.auth;
     const { user } = auth;
     const config = {
@@ -46,11 +46,11 @@ export const updateBlog = createAsyncThunk(
     try {
       const { data } = await axios.put(
         `http://localhost:5000/api/blogs/${id}`,
-        { inputs },
+        {updatedBlog, navigate, toast},
         config
       );
       toast.success("blog updated Successfully");
-      navigate("/blogs");
+      navigate("/");
 
       return data;
     } catch (err) {
@@ -60,19 +60,19 @@ export const updateBlog = createAsyncThunk(
 );
 export const deleteBlog = createAsyncThunk(
   "blog/delete",
-  async ({ id, toast, navigate }, { rejectWithValue, getState }) => {
+  async ({id, toast}, { rejectWithValue, getState }) => {
     const auth = getState()?.auth;
     const { user } = auth;
     const config = {
       headers: { Authorization: `Bearer ${user?.token}` },
     };
     try {
-      const { data } = await axios.put(
+      const { data } = await axios.delete(
         `http://localhost:5000/api/blogs/${id}`,
         config
       );
-      navigate("/blogs");
       toast.success("blog deleted Successfully");
+      
       return data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -83,12 +83,11 @@ export const deleteBlog = createAsyncThunk(
 const blogSlice = createSlice({
   name: "blog",
   initialState: {
-    isEdited: false,
   },
   reducers: {
     EditBlog: (state, action) => {
       state.blogList.map((el) =>
-        el._id === action.payload ? (el.isEdited = !el.isEdited) : el.isEdited
+      el._id === action.payload ? (el.isEdited = !el.isEdited) : el.isEdited
       );
     },
   },
@@ -109,6 +108,7 @@ const blogSlice = createSlice({
     },
     [createBlog.fulfilled]: (state, action) => {
       state.loading = false;
+      window.location.reload();
       state.userBlogs = action?.payload;
     },
     [createBlog.rejected]: (state, action) => {
@@ -131,6 +131,7 @@ const blogSlice = createSlice({
     },
     [deleteBlog.fulfilled]: (state, action) => {
       state.loading = false;
+      window.location.reload();
       state.deletedBlog = action?.payload;
     },
     [deleteBlog.rejected]: (state, action) => {

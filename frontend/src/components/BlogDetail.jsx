@@ -2,23 +2,26 @@ import React, {useState } from "react";
 import { updateBlog } from '../Redux/blogSlice';
 import {useDispatch} from 'react-redux';
 import {EditBlog} from '../Redux/blogSlice';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 import {  Box,Button, InputLabel, TextField, Typography } from "@mui/material";
 const labelStyles = { mb: 1, mt: 2, fontSize: "24px", fontWeight: "bold" };
-function BlogDetail({blog}) {
+function BlogDetail({title,description,id}) {
+  const [updatedBlog, setUpdatedBlog] = useState({});
   const dispatch=useDispatch();
-const [inputs, setInputs] = useState({});
+  const navigate = useNavigate()
   const handleChange = (e) => {
-   setInputs(({...inputs,
+    setUpdatedBlog(({...updatedBlog,
       [e.target.name]: e.target.value,
     }));
   };
   const updateHandler =(e)=>{
     e.preventDefault();
-    dispatch(updateBlog({id:blog._id,title:inputs.title,description:inputs.description}))
+    dispatch(updateBlog({id,updatedBlog,navigate, toast}))
   };
   const cancelHandler =(e)=>{
     e.preventDefault();
-    dispatch(EditBlog (blog._id));
+    dispatch(EditBlog (id));
   }
     return (
          <div>
@@ -42,7 +45,7 @@ const [inputs, setInputs] = useState({});
               variant="h2"
               textAlign={"center"}
             >
-             You can Edit your post
+            {id? "update your blog":"you can not update"}
             </Typography>
             <InputLabel sx={labelStyles}>Title</InputLabel>
             <TextField
@@ -50,6 +53,7 @@ const [inputs, setInputs] = useState({});
               onChange={handleChange}
               margin="auto"
               variant="outlined"
+              defaultValue={title}
             />
             <InputLabel sx={labelStyles}>Description</InputLabel>
             <TextField
@@ -57,6 +61,7 @@ const [inputs, setInputs] = useState({});
               onChange={handleChange}
               margin="auto"
               variant="outlined"
+              defaultValue={description}
             />
 
             <Button
@@ -79,7 +84,7 @@ const [inputs, setInputs] = useState({});
         </form>
 
     </div>
-    )
-}
+    );
+};
 
 export default BlogDetail

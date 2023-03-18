@@ -9,13 +9,14 @@ function Blogs() {
     dispatch(getAllBlogs())
   },[dispatch])
   const{blogList}= useSelector((state)=>state.blogs)
-  const {auth}= useSelector((state) => state);
-  console.log(blogList);
+  // const {user}= useSelector((state) => state.auth);
   return (
     <div>
       {blogList &&
       blogList?.map((blog, index) => (
           <Blog
+          id={blog._id}
+          isEdited={blog.isEdited}
           title={blog.title}
           description={blog.description}
           image={blog.image}

@@ -13,7 +13,7 @@ const blogSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    isEdited: Boolean,
+    isEdited: false,
     user: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,

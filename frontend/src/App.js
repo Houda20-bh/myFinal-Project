@@ -10,11 +10,9 @@ import Register from "./Pages/Register";
 import Blogs from "./Components/Blogs";
 import AddBlog from "./Components/AddBlog";
 import UserBlogs from "./Components/UserBlogs";
-import BlogDetail from "./Components/UserBlogs";
-
+import BlogDetail from "./Components/BlogDetail";
 function App() {
   const { isLoggedIn } = useSelector((state) => state.auth);
-  console.log(isLoggedIn);
   return (
     <React.Fragment>
       <Router>
@@ -24,13 +22,20 @@ function App() {
         </header>
         <main>
           <Routes>
+          {!isLoggedIn ? (
+            <>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            </>
+            ) : (
+              <>
             <Route path="/blogs" element={<Blogs />} />
             <Route path="/blogs/add" element={<AddBlog />} />
             <Route path="/myBlogs" element={<UserBlogs />} />
             <Route path="/myBlogs/:id" element={<BlogDetail />} />
+            </>
+          )}
           </Routes>
         </main>
       </Router>
