@@ -12,6 +12,7 @@ const blogSchema = mongoose.Schema(
     image: {
       type: String,
       required: true,
+      default:'https://thumbs.dreamstime.com/b/white-stone-words-positive-vibes-smile-face-color-glitter-boke-background-positive-vibes-stone-117353582.jpg',
     },
     isEdited: false,
     user: {
