@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const { Error, default: mongoose } = require("mongoose");
 const myBlog = require("../model/blogModel");
-const myUser = require("../model/userModel");
+
 //@desc      Get posts(or blogs)
 //@route     GET /api/blogs
 //@access    Public
@@ -36,14 +36,14 @@ const getBlog = asyncHandler(async (req, res) => {
 
 const setBlog = async (req, res) => {
   const { id } = req.user;
-  const { title, description, image } = req.body;
+  const { title, description, image,isEdited } = req.body;
   try {
     const post = await myBlog.create({
       title,
       description,
       image,
       user: id,
-      isEdited: false,
+      isEdited,
     });
     res.status(200).json({post});
   } catch (error) {
@@ -53,19 +53,12 @@ const setBlog = async (req, res) => {
 //@desc      Update a post(or blog)
 //@route     PUT /api/blogs/:id
 //@access    Private
-
 const updateBlog = async (req, res) => {
   const { id } = req.params;
-  const{title,description}=req.body;
   try {
-    const updatedBlog ={
-      title:title,
-      description:description,
-      _id:id,
-    }
-     await myBlog.findByIdAndUpdate(
+    const updatedBlog = await myBlog.findByIdAndUpdate(
       id,
-      {updatedBlog},
+      { ...req.body },
       { new: true }
     );
     res.status(200).json(updatedBlog);

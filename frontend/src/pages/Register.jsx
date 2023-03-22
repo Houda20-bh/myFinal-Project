@@ -4,7 +4,6 @@ import { FaUser } from 'react-icons/fa'
 import { Link,useNavigate} from "react-router-dom";
 import { register } from '../Redux/authSlice';
 import { toast } from 'react-toastify';
-import Spinner from "../Components/Spinner"
 import {Box,Button,Typography,TextField} from "@mui/material"
 function Register() {
     const [formValue, setFormValue] = useState({
@@ -36,19 +35,24 @@ function Register() {
     }
     return  (
       <>
-      <form onSubmit={onSubmit}>
-        <Box width={400}
+      <Box  width={'40%'} component= "form" onSubmit={onSubmit}
         display={"flex"} flexDirection="column" 
                  alignItems={'center'} justifyContent='center' 
-                 boxShadow="10px 10px 20px #ccc "
+                 boxShadow="5px 5px 10px #ccc "
                  padding={3}
                  margin='auto'
-                 marginTop={5} borderRadius={5}>
-                   <Typography variant='h6' padding={3} textAlign='center'>
+                 marginTop={10} borderRadius={10}>
+                   <Typography variant='h5' padding={3} textAlign='center'>
                    <FaUser /> Register
      <p>Please create an account</p>
       </Typography>
-            
+      <Box
+                  display={'flex'}
+                  flexDirection={'column'}
+                  width={'60%'}
+                  padding={5}
+                  margin='auto' >
+                    
                 <TextField margin="normal" type="text" 
                  id='firstName'
                  name="firstName" value={firstName}
@@ -97,20 +101,14 @@ function Register() {
                  fullWidth
                  autoFocus
                  onChange={onChange}/>
+            </Box>
                  <Button  type='submit' variant='contained' sx={{marginTop:3,borderRadius:3}} color='warning'>
-                    {loading && (
-                  <Spinner 
-                    size="sm"
-                    role="status"
-                    tag="span"
-                    className="me-2"
-                  />
-                )}Sign Up</Button>
+                  Sign Up</Button>
                  <Button variant='contained' sx={{borderRadius:3,marginTop:3}}> 
                       <Link to='/Login'>
                       Change to Login</Link> </Button>
                  </Box>
-            </form>
+           
          
         </>
       );

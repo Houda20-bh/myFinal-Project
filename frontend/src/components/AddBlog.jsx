@@ -1,5 +1,6 @@
 import React from 'react'
 import { useState,useEffect } from 'react'
+import PostAddIcon from '@mui/icons-material/PostAdd';
 import { useDispatch,useSelector } from 'react-redux';
 import {Typography,Box,Button, InputLabel, TextField,} from "@mui/material"
 import { createBlog } from '../Redux/blogSlice';
@@ -26,26 +27,36 @@ function AddBlog() {
   }
   
   return (
-    <div>
-      <form onSubmit={onSubmit}>
-        <Box borderColor ="linear-gradient(90deg, rgba(30,0,36,1) 0%, rgba(76,56,241,1) 35%, rgba(200,59,200,1) 100%);" 
-        border={3} borderRadius={10}
-        boxShadow='10px 10px 20px #ccc' padding={3} margin={'auto'} marginTop={3}
-        display="flex" flexDirection={'column'} width={'60%'}>
+   <Box  display="flex" 
+   flexDirection={'column'} 
+   width={'100%'}
+   height={'100%'}>
+        <Box 
+        display="flex"  
+        padding={2}
+         margin={'auto'}>
           <Typography  fontWeight={'bold'} padding={3} color="black" variant='h2'
-          textAlign={'center'}> Post your Blog</Typography>
-          
+          textAlign={'center'}> Share your Post </Typography>
+          <PostAddIcon sx={{fontSize:'40px', paddingLeft:1, color:'lightcoral'}}/>
+          </Box>
+          <form onSubmit={onSubmit}>
+            <Box   
+       display="flex"  
+        padding={3}
+         margin={'auto'}
+         flexDirection={'column'} 
+         width={'70%'}>
           <InputLabel  sx={{labelStyles}}  onChange={onChange}> Title </InputLabel>
-          <TextField  name='title' onChange={onChange}  margin='normal' variant='outlined'/>
+          <TextField variant={'standard'} name='title' onChange={onChange}  margin='auto'/>
           <InputLabel  sx={{labelStyles}}> Description</InputLabel>
-          <TextField name='description' onChange={onChange}   margin='normal' variant='outlined'/>
+          <TextField variant={'standard'} name='description' onChange={onChange}   margin='auto' />
           <InputLabel  sx={{labelStyles}}> ImageURL</InputLabel>
-          <TextField  name='image' onChange={onChange} margin='normal' variant='outlined'/>
-          <Button  variant='contained' sx={{mt:2,borderRadius:10}} color='warning' type='submit'>  Submit
+          <TextField variant={'standard'} name='image' onChange={onChange} margin='auto'/>
+          <Button  variant='contained' sx={{borderRadius:7, width:'50%', margin:'auto',mt:3,}} color='warning' type='submit'>  Post
           </Button>
+          </Box>
+          </form>
         </Box>
-      </form>
-        </div>
   )
 }
 

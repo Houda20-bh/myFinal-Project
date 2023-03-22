@@ -3,6 +3,7 @@ import Blog from './Blog'
 import{useDispatch,useSelector} from 'react-redux'
 import { useEffect } from 'react'
 import { getAllBlogs } from '../Redux/blogSlice';
+import { Box } from '@mui/system';
 function Blogs() {
   const dispatch= useDispatch();
   useEffect(()=>{
@@ -11,7 +12,12 @@ function Blogs() {
   const{blogList}= useSelector((state)=>state.blogs)
   // const {user}= useSelector((state) => state.auth);
   return (
-    <div>
+   
+      <Box display={'flex'}
+      flexDirection={'column'}
+      padding={3}
+      justifyContent={'center'}
+      alignItems={'center'}>
       {blogList &&
       blogList?.map((blog, index) => (
           <Blog
@@ -23,7 +29,8 @@ function Blogs() {
           userName={blog.user.name}
           />
         ))}
-    </div>
+        </Box>
+    
   );
 };
 export default Blogs;

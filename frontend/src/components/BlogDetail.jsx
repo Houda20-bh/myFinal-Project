@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import {  Box,Button, InputLabel, TextField, Typography } from "@mui/material";
 const labelStyles = { mb: 1, mt: 2, fontSize: "24px", fontWeight: "bold" };
+
 function BlogDetail({title,description,id}) {
   const [updatedBlog, setUpdatedBlog] = useState({});
   const dispatch=useDispatch();
@@ -17,11 +18,11 @@ function BlogDetail({title,description,id}) {
   };
   const updateHandler =(e)=>{
     e.preventDefault();
-    dispatch(updateBlog({id,updatedBlog,navigate, toast}))
+    dispatch(updateBlog({id,updatedBlog,navigate,toast}))
   };
   const cancelHandler =(e)=>{
     e.preventDefault();
-    dispatch(EditBlog (id));
+    dispatch(EditBlog(id));
   }
     return (
          <div>
