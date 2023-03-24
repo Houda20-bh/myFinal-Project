@@ -20,7 +20,15 @@ const blogSchema = mongoose.Schema(
       required: true,
       ref: "User",
     },
+    date:{
+      type: Date,
+    },
+    likes:{
+      type:Number,
+      default:0,
+    }
+
   },
-  { timestamps: true }
+  // { timestamps: true }
 );
 module.exports = mongoose.model("Blog", blogSchema);

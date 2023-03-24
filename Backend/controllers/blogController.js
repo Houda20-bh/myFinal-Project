@@ -7,7 +7,7 @@ const myBlog = require("../model/blogModel");
 //@access    Public
 const getBlogs = async (req, res) => {
   try {
-    const blogs = await myBlog.find().sort({ createdAt: -1 }).populate('user');
+    const blogs = await myBlog.find().populate('user');
     if (!blogs) {
       return res.status(404).json({ message: "No Blogs Found" });
     }
@@ -36,7 +36,7 @@ const getBlog = asyncHandler(async (req, res) => {
 
 const setBlog = async (req, res) => {
   const { id } = req.user;
-  const { title, description, image,isEdited } = req.body;
+  const { title, description, image,isEdited,date } = req.body;
   try {
     const post = await myBlog.create({
       title,
@@ -44,6 +44,7 @@ const setBlog = async (req, res) => {
       image,
       user: id,
       isEdited,
+      date:new Date(`${date}`),
     });
     res.status(200).json({post});
   } catch (error) {

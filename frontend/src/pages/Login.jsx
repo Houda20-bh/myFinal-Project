@@ -12,9 +12,12 @@ function Login() {
         email:'',
         password:'',  
     })
-    const { loading, error } = useSelector((state) => state.auth);
+    const { loading, error,user } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate()
+    useEffect(() => {
+      error && toast.error(error);
+    }, [error]);
     const onChange =(e)=>{
       setFormValue({...formValue,[e.target.name]:e.target.value})
     } 
@@ -65,7 +68,10 @@ function Login() {
                  
                     <Button   type="submit" variant='contained'  
                      sx={{borderRadius:3,marginTop:3}} color='warning'>
-          
+          {loading && (<div class="spinner-border" role="status">
+  <span class="sr-only">Loading...</span>
+</div>
+)}
                       login</Button>
                       <Button  type="submit" variant='contained' sx={{marginTop:3,borderRadius:3}}> 
                       <Link to='/register'>

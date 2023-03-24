@@ -4,8 +4,9 @@ import {useDispatch} from 'react-redux';
 import DeleteForeverIcon from '@mui/icons-material/Delete';
 import {deleteBlog, EditBlog} from '../Redux/blogSlice';
 import BlogDetail from './BlogDetail';
+import NotesIcon from '@mui/icons-material/Notes';
 import { toast } from 'react-toastify';
-function Blog({title,description,image,userName,isEdited,id}) {
+function Blog({title,description,image,userName,isEdited,id,date}) {
   const dispatch= useDispatch();
  const handleEdit= (e)=>{
   e.preventDefault();
@@ -38,23 +39,29 @@ function Blog({title,description,image,userName,isEdited,id}) {
       avatar={
         <Avatar sx={{ bgcolor: 'red' }} aria-label="blog">
      {userName ? userName.charAt(0) : ""}
-    
+   
         </Avatar>
       }
+      action={<IconButton><NotesIcon/></IconButton>}
       title= {title}
+      subheader= {date}
+    
     />
     <CardMedia
       component="img"
       height="194"
       image={image}
-      alt=""
+      alt={title}
     />
     <CardContent>
     <hr></hr>
     <br></br>
-      <Typography variant="body2" color="text.secondary">
-      <b>{userName}</b> {": "} {description}
-      </Typography>
+    <Box paddingTop={1} display={'flex'} > 
+      <Typography  fontWeight={'bold'} variant="caption" color="text.secondary">
+      <b>{userName}</b> {": "} 
+      
+      <Typography>{description}</Typography>
+      </Typography></Box>
     </CardContent>
     <CardActions  sx={{marginLeft:'auto'}}>
     {isEdited && <BlogDetail title={title} description={description}  id={id}/> }

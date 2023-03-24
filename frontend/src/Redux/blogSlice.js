@@ -27,7 +27,7 @@ export const createBlog = createAsyncThunk(
         config
       );
       toast.success("blog Added Successfully");
-      navigate("/blogs");
+      navigate("/myblogs");
       return data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -37,7 +37,10 @@ export const createBlog = createAsyncThunk(
 
 export const updateBlog = createAsyncThunk(
   "blog/update",
-  async ({id,updatedBlog, navigate, toast} , { rejectWithValue, getState }) => {
+  async (
+    { id, updatedBlog, navigate, toast },
+    { rejectWithValue, getState }
+  ) => {
     const auth = getState()?.auth;
     const { user } = auth;
     const config = {
@@ -46,7 +49,7 @@ export const updateBlog = createAsyncThunk(
     try {
       const { data } = await axios.put(
         `http://localhost:5000/api/blogs/${id}`,
-        {updatedBlog, navigate, toast},
+        updatedBlog,
         config
       );
       toast.success("blog updated Successfully");

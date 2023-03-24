@@ -65,17 +65,26 @@ export const getConnectedUser = createAsyncThunk(
   }
 );
 
-const user = localStorage.getItem("userInfos")
-  ? JSON.parse(localStorage.getItem("userInfos"))
-  : null;
+// const user = localStorage.getItem("userInfos")
+//   ? JSON.parse(localStorage.getItem("userInfos"))
+//   : null;
 
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    user: user,
+    user:null,
     error: "",
     loading: false,
     isLoggedIn: false,
+  },
+  reducers: {
+    setUser: (state, action) => {
+      state.user = action.payload;
+    },
+    setLogout: (state, action) => {
+      localStorage.clear();
+      state.user = null;
+    },
   },
   extraReducers: {
     [register.pending]: (state, action) => {
@@ -83,6 +92,8 @@ const authSlice = createSlice({
     },
     [register.fulfilled]: (state, action) => {
       state.loading = false;
+      localStorage.setItem("profile", JSON.stringify({ ...action.payload }));
+      state.user = action.payload;
       state.user = action?.payload;
       state.isLoggedIn = true;
     },
@@ -97,6 +108,7 @@ const authSlice = createSlice({
     },
     [login.fulfilled]: (state, action) => {
       state.loading = false;
+      localStorage.setItem("profile", JSON.stringify({ ...action.payload }));
       state.user = action?.payload;
       state.isLoggedIn = true;
     },
@@ -135,5 +147,5 @@ const authSlice = createSlice({
     },
   },
 });
-
+export const { setUser, setLogout } = authSlice.actions;
 export default authSlice.reducer;

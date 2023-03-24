@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import {logout} from '../Redux/authSlice'
 import {AppBar,Toolbar,Typography,Box,Button,Tabs,Tab,LinkComponent} from "@mui/material"
+import NoteIcon from '@mui/icons-material/Note';
+import { setLogout } from "../Redux/authSlice";
 import { useState } from 'react'
 
 function Header() {
@@ -11,26 +13,41 @@ function Header() {
   const dispatch = useDispatch()
   const { user } = useSelector(state => state.auth)
  const [value,setValue]= useState()
-  const onLogout = () => {
-    dispatch(logout())
+  // const onLogout = () => {
+  //   dispatch(logout())
+    
+  // }
+  const handleLogout = () => {
+    dispatch(setLogout());
     navigate('/')
-  }
+    
+  };
 
   return (
+    <>
     <AppBar position='sticky'
-       sx={{background:'linear-gradient(90deg, rgba(30,0,36,1) 0%, rgba(3,71,69,1) 35%, rgba(200,59,200,1) 100%)'}}>
+       sx={{bgcolor:'transparent'}}>
      <Toolbar>
+      < NoteIcon sx={{color:'black'}} />
       <Typography variant='h4'> BlogsApp</Typography>
       {user && <Box display="flex" marginLeft={"auto"} marginRight="auto">
-        <Tabs textColor='inherit' value={value} onChange={(e,val)=>setValue(val)}>
-       <Tab LinkComponent={Link} to='/blogs' label="All Blogs">  </Tab>  
-      <Tab LinkComponent={Link} to='/myBlogs' label="My Blogs"> </Tab>  
-      <Tab  LinkComponent={Link} to='/blogs/add' label="Add Blog"></Tab>
+        <Tabs   sx={{ml:'auto',textDecoration:'none'}} value={value} onChange={(e,val)=>setValue(val)}>
+       <Tab sx={{textDecoration:'none',fontWeight:'bold',fontFamily:'cursive',":hover":{
+      
+        textUnderlineOffset:'10px'
+      }}}LinkComponent={Link} to='/blogs' label="All Blogs">  </Tab>  
+      <Tab  sx={{textDecoration:'none',fontWeight:'bold',fontFamily:'cursive',":hover":{
+        textUnderlineOffset:'10px'
+      }}} LinkComponent={Link} to='/myBlogs' label="My Blogs"> </Tab>  
+      <Tab  sx={{textDecoration:'none',fontWeight:'bold',fontFamily:'cursive',":hover":{
+     
+        textUnderlineOffset:'10px'
+      }}}LinkComponent={Link} to='/blogs/add' label="Add Blog"></Tab>
         </Tabs>
 
       </Box>}
       <Box display="flex"  marginLeft='auto'>
-            {user && <Button onClick={onLogout} variant='contained' sx={{margin:1,borderRadius:10}} color='warning' >
+            {user && <Button onClick={() => handleLogout()} variant='contained' sx={{margin:1,borderRadius:10}} color='warning' >
               <FaSignOutAlt /> Logout
             </Button>}
           {!user && <>
@@ -45,11 +62,17 @@ function Header() {
               </Link>
               </Button>
           </>}
-    
       </Box>
       </Toolbar>
     </AppBar>
+    <center> <br></br>
+        {user && (<h5 style={{ marginRight: "30px", marginTop: "27px" }}>
+        Welcome : {user?.user?.name}</h5>)} 
+       <br></br></center>
+       
+       </>
   )
+  
 }
 
 export default Header

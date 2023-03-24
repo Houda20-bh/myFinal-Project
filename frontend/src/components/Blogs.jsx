@@ -21,12 +21,14 @@ function Blogs() {
       {blogList &&
       blogList?.map((blog, index) => (
           <Blog
+          date={new Date(`${blog.date}`).toLocaleDateString()}
           id={blog._id}
           isEdited={blog.isEdited}
           title={blog.title}
           description={blog.description}
           image={blog.image}
           userName={blog.user.name}
+          key={index}
           />
         ))}
         </Box>
