@@ -1,11 +1,19 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-export const getAllBlogs = createAsyncThunk("blogs/getAll", async () => {
+export const getAllBlogs = createAsyncThunk("blogs/getAll", async (_, {rejectWithValue}) => {
   try {
     const { data } = await axios.get("http://localhost:5000/api/blogs");
     return data;
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    return rejectWithValue(err.response.data);
+  }
+});
+export const SearchBlog = createAsyncThunk("/blog/search", async (searchQuery,{rejectWithValue}) => {
+  try {
+    const { data } = await axios.get(`http://localhost:5000/api/blogs/search?searchQuery=${searchQuery}`);
+    return data;
+  } catch (err) {
+    return rejectWithValue(err.response.data);
   }
 });
 export const getBlog = createAsyncThunk("blog/getblog", async (id) => {
@@ -20,7 +28,7 @@ export const createBlog = createAsyncThunk(
   "blog/create",
   async (
     { blogData, navigate, toast },
-    { rejectWithValue, getState, dispatch }
+    { rejectWithValue, getState }
   ) => {
     const auth = getState()?.auth;
     const { user } = auth;
@@ -63,6 +71,27 @@ export const updateBlog = createAsyncThunk(
       toast.success("blog updated Successfully");
       navigate("/");
 
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+export const likeBlog = createAsyncThunk(
+  "blog/like",
+  async (
+    {id}, { rejectWithValue,getState }
+  ) => {
+    const auth = getState()?.auth;
+    const { user } = auth;
+    const config = {
+      headers: { Authorization: `Bearer ${user?.token}` },
+    };
+    try {
+      const { data } = await axios.patch(
+         `http://localhost:5000/api/blogs/like/${id}`,
+        config
+      );
       return data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -156,10 +185,51 @@ const blogSlice = createSlice({
     [deleteBlog.fulfilled]: (state, action) => {
       state.loading = false;
       window.location.reload();
+      const{arg}=action.meta;
+      if(arg){
+        state.userBlogs=state.userBlogs.filter((item)=>item._id !==arg);
+        state.blogList=state.blogList.filter((item)=>item._id !==arg);}
       state.deletedBlog = action?.payload;
-    },
+      },
     [deleteBlog.rejected]: (state, action) => {
       state.loading = false;
+      state.error = action.payload.message;
+    },
+    [updateBlog.pending]: (state, action) => {
+      state.loading = true;
+    },
+    [updateBlog.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.updatedBlog = action?.payload;
+    },
+    [updateBlog.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.payload.message;
+    },
+    [SearchBlog.pending]: (state, action) => {
+      state.loading = true;
+    },
+    [SearchBlog.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.blogList= action.payload;
+    },
+    [SearchBlog.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.payload.message;
+    },
+    [likeBlog.pending]: (state, action) => { },
+    [likeBlog.fulfilled]: (state, action) => {
+      state.loading = false;
+      const {
+        arg: { _id },
+      } = action.meta;
+      if (_id) {
+        state.blogList = state.blogList.map((item) =>
+          item._id === _id ? action.payload : item
+        );
+      }
+    },
+    [likeBlog.rejected]: (state, action) => {
       state.error = action.payload.message;
     },
   },

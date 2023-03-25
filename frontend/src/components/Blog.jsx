@@ -1,18 +1,24 @@
-import {Card,CardHeader,CardMedia,Typography,Box ,CardContent,Avatar, IconButton, CardActions }from '@mui/material';
+import {Card,CardHeader,CardMedia,Typography,Box ,CardContent,Avatar, IconButton, CardActions, Button }from '@mui/material';
 import ModeEditOutlineIcon from '@mui/icons-material/Edit';
-import {useDispatch} from 'react-redux';
+import {useDispatch,useSelector} from 'react-redux';
 import DeleteForeverIcon from '@mui/icons-material/Delete';
 import {deleteBlog, EditBlog} from '../Redux/blogSlice';
 import BlogDetail from './BlogDetail';
 import NotesIcon from '@mui/icons-material/Notes';
 import { toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
-function Blog({title,description,image,userName,isEdited,id,date}) {
-  const dispatch= useDispatch();
- const handleEdit= (e)=>{
-  e.preventDefault();
+import { Link ,useNavigate} from 'react-router-dom';
+import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
+import { likeBlog} from "../Redux/blogSlice";
+
+function Blog({title,description,image,userName,isEdited,id,date,likes,}) {
+const {auth}= useSelector((state) => state)
+const userId = auth?.user?._id 
+const dispatch= useDispatch();
+const navigate = useNavigate();
+const handleEdit = () => {
   dispatch(EditBlog(id))
- }
+  navigate(`/myBlogs/${id}`);
+};
  const excerpt = (str) => {
   if (str.length > 20) {
     str = str.substring(0, 20) + " ...";
@@ -21,11 +27,45 @@ function Blog({title,description,image,userName,isEdited,id,date}) {
 };  
  console.log(id);
   const handleDelete=(id)=>{
+    navigate(`/myBlogs/${id}`);
    if(window.confirm('Are you sure you want to delete this blog?')){
     dispatch(deleteBlog({ id, toast }))
    }
-   
   }
+  const Likes = () => {
+    if (likes.length > 0) {
+      return likes.find((like) => like === userId) ? (
+        <>
+          <IconButton fas icon="thumbs-up" />
+          &nbsp;
+          {likes.length > 2 ? (
+            <ThumbDownOutlinedIcon
+              title={`You and ${likes.length - 1} other people likes`}
+            >
+              {likes.length} Likes
+            </ThumbDownOutlinedIcon>
+          ) : (
+            `${likes.length} Like${likes.length > 1 ? "s" : ""}`
+          )}
+        </>
+      ) : (
+        <>
+          <IconButton  far icon="thumbs-up" />
+          &nbsp;{likes.length} {likes.length === 1 ? "Like" : "Likes"}
+        </>
+      );
+    }
+    return (
+      <>
+        <IconButton far icon="thumbs-up" />
+        &nbsp;Like
+      </>
+    );
+  };
+  const handleLike = () => {
+    dispatch(likeBlog({ userId }));
+  };
+
   return (
     <Card sx={{
       width: "50%",
@@ -66,7 +106,7 @@ function Blog({title,description,image,userName,isEdited,id,date}) {
     <Box paddingTop={1} display={'flex'} > 
       <Typography  fontWeight={'bold'} variant="caption" color="text.secondary">
       <b>{userName}</b> {": "} 
-      
+
       <Typography className="text-start">
             {excerpt(description)}
             <Link to={`/blog/${id}`}>Read More</Link>
@@ -76,13 +116,25 @@ function Blog({title,description,image,userName,isEdited,id,date}) {
     <CardActions  sx={{marginLeft:'auto'}}>
     {isEdited && <BlogDetail title={title} description={description}  id={id}/> }
 
-       { !isEdited &&<IconButton onClick={handleEdit} sx={{marginLeft:'auto'}}><ModeEditOutlineIcon color="warning"/></IconButton>}
-        <IconButton onClick={()=>handleDelete(id)}>< DeleteForeverIcon color="error"/></IconButton>
+       {auth?.user && <><IconButton onClick={handleEdit} sx={{marginLeft:'auto'}}><ModeEditOutlineIcon color="warning"/></IconButton>
+        <IconButton onClick={()=>handleDelete(id)}>< DeleteForeverIcon color="error"/></IconButton></>}
 
-     
+        <IconButton 
+            style={{ float: "right" }}
+            tag="a"
+            color="none"
+           onClick={!auth?.connectedUser ? null : handleLike}
+          >
+            {!auth?.connectedUser ? (
+              <ThumbDownOutlinedIcon  title="Please login to like "  color="warning">
+                <Likes />
+              </ThumbDownOutlinedIcon >) : (
+              <Likes /> 
+          ) } 
+          </IconButton >
     </CardActions >
   </Card>
   )
 }
 
-export default Blog
+export default Blog;

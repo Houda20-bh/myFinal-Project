@@ -1,21 +1,20 @@
-
 import React, { useEffect } from "react";
-import {Card,CardHeader,CardMedia,Typography,Box ,CardContent,Avatar, IconButton }from '@mui/material';
+import {Card,CardHeader,CardMedia,Typography,Box ,CardContent,Avatar, IconButton, CardActions }from '@mui/material';
 import {useDispatch,useSelector} from 'react-redux';
 import NotesIcon from '@mui/icons-material/Notes';
 import { useParams } from "react-router-dom";
 import {getBlog } from "../Redux/blogSlice";
+import DisqusThread from '../Components/DisqusThread';
 const SingleBlog = () => {
   const { id } = useParams();
 const dispatch = useDispatch();  
 const{blog}= useSelector((state)=>state.blogs)
- 
  const {user}= useSelector((state) => state.auth);
    useEffect(() => {
     if (id) {
       dispatch(getBlog(id));
     }
-  }, []);
+  }, [id]);
   return (
     <Card sx={{
         width: "50%",
@@ -60,7 +59,9 @@ const{blog}= useSelector((state)=>state.blogs)
         <Typography>{blog.description}</Typography>
         </Typography></Box>
         </CardContent>
+        <DisqusThread id={id} title={blog.title} path={`/blog/${id}`}/> 
         </Card>
+        
   )
 }
 

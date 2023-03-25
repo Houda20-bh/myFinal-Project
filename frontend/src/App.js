@@ -16,6 +16,7 @@ import UserBlogs from "./Components/UserBlogs";
 import BlogDetail from "./Components/BlogDetail";
 import  SingleBlog from './Pages/SingleBlog.jsx'
 import PrivateRoute from './Components/PrivateRoute'
+import NotFound from "./Pages/NotFound";
 function App() {
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem("profile"));
@@ -35,6 +36,7 @@ function App() {
        
             <>
             <Route path="/" element={<Home />} />
+            <Route path="blogs/search" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/blog/:id" element={<SingleBlog />} />
@@ -43,7 +45,8 @@ function App() {
             <Route path="/blogs/add" element={ <PrivateRoute><AddBlog /></PrivateRoute>} />
             <Route path="/myBlogs" element={<PrivateRoute><UserBlogs /></PrivateRoute>} />
             <Route path="/myBlogs/:id" element={<PrivateRoute><BlogDetail /></PrivateRoute>} /> 
-          </Routes>
+            <Route path="*" element={<NotFound />} />
+         </Routes>
         </main>
       </Router>
     </React.Fragment>

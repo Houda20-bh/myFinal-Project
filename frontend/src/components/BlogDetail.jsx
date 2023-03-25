@@ -1,13 +1,16 @@
 import React, {useState } from "react";
 import { updateBlog } from '../Redux/blogSlice';
-import {useDispatch} from 'react-redux';
+import {useDispatch,useSelector} from 'react-redux';
 import {EditBlog} from '../Redux/blogSlice';
+import { useParams } from "react-router-dom";
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import {  Box,Button, InputLabel, TextField, Typography } from "@mui/material";
 const labelStyles = { mb: 1, mt: 2, fontSize: "24px", fontWeight: "bold" };
 
-function BlogDetail({title,description,id}) {
+function BlogDetail() {
+  const id = useParams().id;
+  const{blog}= useSelector((state)=>state.blogs)
   const [updatedBlog, setUpdatedBlog] = useState({});
   const dispatch=useDispatch();
   const navigate = useNavigate()
@@ -46,7 +49,7 @@ function BlogDetail({title,description,id}) {
               variant="h2"
               textAlign={"center"}
             >
-            {id? "update your blog":"you can not update"}
+            {blog?._id ? ("update your blog"):("you can not update")}
             </Typography>
             <InputLabel sx={labelStyles}>Title</InputLabel>
             <TextField
@@ -54,7 +57,7 @@ function BlogDetail({title,description,id}) {
               onChange={handleChange}
               margin="auto"
               variant="outlined"
-              defaultValue={title}
+              defaultValue={blog?.title}
             />
             <InputLabel sx={labelStyles}>Description</InputLabel>
             <TextField
@@ -62,7 +65,7 @@ function BlogDetail({title,description,id}) {
               onChange={handleChange}
               margin="auto"
               variant="outlined"
-              defaultValue={description}
+              defaultValue={blog.description}
             />
 
             <Button

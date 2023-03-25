@@ -16,6 +16,7 @@ const getBlogs = async (req, res) => {
     res.status(500).json(error);
   }
 };
+ 
 
 //@desc      Get a single post(or blog)
 //@route     GET /api/blogs/:id
@@ -80,6 +81,37 @@ const deleteBlog = asyncHandler(async (req, res) => {
     res.status(500).json(error);
   }
 });
+ const SearchBlog = async (req, res) => {
+  const {searchQuery} = req.query;
+  try {
+    const title = new RegExp(searchQuery, "i");
+    const Blogs = await myBlog.find({ title });
+    res.json(Blogs);
+  } catch (error) {
+    res.status(404).json({ message: "Something went wrong" });
+  }
+};
+const likeBlog = async (req, res) => {
+   const { id } = req.params;
+  try {
+    if (!req.userId) {
+      return res.json({ message: "User is not authenticated" });
+    }
+
+    const Blog = await myBlog.findById(id);
+
+    const index = tour.likes.findIndex((id) => id === String(req.userId));
+
+    if (index === -1) {
+      Blog.likes.push(req.userId);
+    } else {
+      Blog.likes = Blog.likes.filter((id) => id !== String(req.userId));
+    }
+} catch (error) {
+  res.status(404).json({ message: "Something went wrong" });
+}
+  };
+
 
 module.exports = {
   getBlogs,
@@ -87,4 +119,6 @@ module.exports = {
   setBlog,
   updateBlog,
   deleteBlog,
+  SearchBlog,
+  likeBlog,
 };
