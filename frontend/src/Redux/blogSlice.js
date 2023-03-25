@@ -8,6 +8,14 @@ export const getAllBlogs = createAsyncThunk("blogs/getAll", async () => {
     console.log(error);
   }
 });
+export const getBlog = createAsyncThunk("blog/getblog", async (id) => {
+  try {
+    const { data } = await axios.get(`http://localhost:5000/api/blogs/${id}`);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+});
 export const createBlog = createAsyncThunk(
   "blog/create",
   async (
@@ -85,8 +93,10 @@ export const deleteBlog = createAsyncThunk(
 
 const blogSlice = createSlice({
   name: "blog",
-  initialState: {
-  },
+  initialState: 
+  {
+    blog:{},
+   },
   reducers: {
     EditBlog: (state, action) => {
       state.blogList.map((el) =>
@@ -103,6 +113,17 @@ const blogSlice = createSlice({
       state.blogList = action?.payload;
     },
     [getAllBlogs.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.payload.message;
+    },
+    [getBlog.pending]: (state, action) => {
+      state.loading = true;
+    },
+    [getBlog.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.blog = action?.payload;
+    },
+    [getBlog.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.payload.message;
     },

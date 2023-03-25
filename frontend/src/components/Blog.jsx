@@ -6,12 +6,19 @@ import {deleteBlog, EditBlog} from '../Redux/blogSlice';
 import BlogDetail from './BlogDetail';
 import NotesIcon from '@mui/icons-material/Notes';
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
 function Blog({title,description,image,userName,isEdited,id,date}) {
   const dispatch= useDispatch();
  const handleEdit= (e)=>{
   e.preventDefault();
   dispatch(EditBlog(id))
  }
+ const excerpt = (str) => {
+  if (str.length > 20) {
+    str = str.substring(0, 20) + " ...";
+  }
+  return str;
+};  
  console.log(id);
   const handleDelete=(id)=>{
    if(window.confirm('Are you sure you want to delete this blog?')){
@@ -60,7 +67,10 @@ function Blog({title,description,image,userName,isEdited,id,date}) {
       <Typography  fontWeight={'bold'} variant="caption" color="text.secondary">
       <b>{userName}</b> {": "} 
       
-      <Typography>{description}</Typography>
+      <Typography className="text-start">
+            {excerpt(description)}
+            <Link to={`/blog/${id}`}>Read More</Link>
+          </Typography>
       </Typography></Box>
     </CardContent>
     <CardActions  sx={{marginLeft:'auto'}}>

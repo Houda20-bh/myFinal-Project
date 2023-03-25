@@ -14,6 +14,8 @@ import Blogs from "./Components/Blogs";
 import AddBlog from "./Components/AddBlog";
 import UserBlogs from "./Components/UserBlogs";
 import BlogDetail from "./Components/BlogDetail";
+import  SingleBlog from './Pages/SingleBlog.jsx'
+import PrivateRoute from './Components/PrivateRoute'
 function App() {
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem("profile"));
@@ -35,11 +37,12 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/blog/:id" element={<SingleBlog />} />
             </>
             <Route path="/blogs" element={<Blogs />} />
-            <Route path="/blogs/add" element={<AddBlog />} />
-            <Route path="/myBlogs" element={<UserBlogs />} />
-            <Route path="/myBlogs/:id" element={<BlogDetail />} /> 
+            <Route path="/blogs/add" element={ <PrivateRoute><AddBlog /></PrivateRoute>} />
+            <Route path="/myBlogs" element={<PrivateRoute><UserBlogs /></PrivateRoute>} />
+            <Route path="/myBlogs/:id" element={<PrivateRoute><BlogDetail /></PrivateRoute>} /> 
           </Routes>
         </main>
       </Router>

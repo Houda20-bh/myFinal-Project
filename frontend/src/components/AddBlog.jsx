@@ -16,6 +16,7 @@ function AddBlog() {
  useEffect(() => {
   error && toast.error(error);
 }, [error]);
+
   const [blogData, setBlogData]= useState({
   title:'',
   description:'',
