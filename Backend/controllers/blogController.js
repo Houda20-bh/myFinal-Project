@@ -6,13 +6,21 @@ const myBlog = require("../model/blogModel");
 //@route     GET /api/blogs
 //@access    Public
 const getBlogs = async (req, res) => {
+  const { page } = req.query;
   try {
-    const blogs = await myBlog.find().populate('user');
-    if (!blogs) {
-      return res.status(404).json({ message: "No Blogs Found" });
-    }
-    return res.status(200).json(blogs);
-  } catch (error) {
+      const limit = 4;
+      const startIndex = (Number(page) - 1) * limit;
+      const total = await myBlog.countDocuments({});
+      const blogs = await myBlog.find().limit(limit).skip(startIndex).populate('user');
+      res.json({
+        data: blogs,
+        currentPage: Number(page),
+        totalBlogs: total,
+        numberOfPages: Math.ceil(total / limit),
+      });
+
+  } 
+  catch (error) {
     res.status(500).json(error);
   }
 };

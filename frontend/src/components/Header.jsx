@@ -4,7 +4,7 @@ import { FaSignInAlt, FaSignOutAlt, FaUser } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 
-import {AppBar,Toolbar,Typography,Box,Button,Tabs,Tab,LinkComponent, TextField} from "@mui/material"
+import {AppBar,Toolbar,Typography,Box,Button,Tabs,Tab, TextField} from "@mui/material"
 import NoteIcon from '@mui/icons-material/Note';
 import { setLogout } from "../Redux/authSlice";
 import { SearchBlog } from "../Redux/blogSlice";
@@ -13,7 +13,6 @@ import { SearchBlog } from "../Redux/blogSlice";
 
 function Header() {
   const [search, setSearch] = useState("");
-  const {isLoggedIn }= useSelector (state=>state.auth)
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { user } = useSelector(state => state.auth)
@@ -38,13 +37,13 @@ function Header() {
     }
   };
   return (
-    <>
+ 
     <AppBar position='sticky'
        sx={{bgcolor:'transparent'}}>
      <Toolbar>
       < NoteIcon sx={{color:'black'}} />
       <Typography variant='h4'> BlogsApp</Typography>
-      {user && <Box display="flex" marginLeft={"auto"} marginRight="auto">
+      {user &&  <><Box display="flex" marginLeft={"auto"} marginRight="auto">
         <Tabs   sx={{ml:'auto',textDecoration:'none'}} value={value} onChange={(e,val)=>setValue(val)}>
        <Tab sx={{textDecoration:'none',fontWeight:'bold',fontFamily:'cursive',":hover":{
       
@@ -59,7 +58,22 @@ function Header() {
       }}}LinkComponent={Link} to='/blogs/add' label="Add Blog"></Tab>
         </Tabs>
 
-      </Box>}
+      </Box>
+       <Box>
+       <form onSubmit={handleSubmit}>
+       
+       <TextField variant={'standard'}
+         type="text"
+         placeholder="Search Post"
+         value={search}
+         onChange={(e) => setSearch(e.target.value)}
+       />
+       
+       <ZoomOutIcon variant='contained' sx={{margin:1,borderRadius:10}} color='warning' />
+     </form>
+       </Box></>
+      }
+     
       <Box display="flex"  marginLeft='auto'>
             {user && <Button onClick={() => handleLogout()} variant='contained' sx={{margin:1,borderRadius:10}} color='warning' >
               <FaSignOutAlt /> Logout
@@ -77,26 +91,11 @@ function Header() {
               </Button>
           </>}
       </Box>
-      <form onSubmit={handleSubmit}>
-      
-            <TextField variant={'standard'}
-              type="text"
-              placeholder="Search Post"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            
-            <ZoomOutIcon variant='contained' sx={{margin:1,borderRadius:10}} color='warning' />
-          </form>
+    
       </Toolbar>
       
     </AppBar>
-    <center> <br></br>
-        {user && (<h5 style={{ marginRight: "30px", marginTop: "27px" }}>
-        Welcome : {user?.user?.name}</h5>)} 
-       <br></br></center>
-       
-       </>
+   
   )
   
 }

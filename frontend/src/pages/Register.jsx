@@ -13,7 +13,7 @@ function Register() {
         password:'',
         password2:'',
     })
-    const {loading,error}= useSelector((state) => state.auth)
+    const {error}= useSelector((state) => state.auth)
     const {firstName,lastName,email,password, password2} = formValue
     const dispatch = useDispatch();
     const navigate = useNavigate();

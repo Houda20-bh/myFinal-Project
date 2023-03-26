@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const SHORTNAME = 'exgood-vibes-2';
-const WEBSITE_URL = 'http://localhost3000';
+const SHORTNAME = 'good-vibes-2';
+const WEBSITE_URL = "http://localhost3000";
 
 function renderDisqus() {
   if (window.DISQUS === undefined) {

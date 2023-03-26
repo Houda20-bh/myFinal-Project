@@ -1,4 +1,4 @@
-import {Card,CardHeader,CardMedia,Typography,Box ,CardContent,Avatar, IconButton, CardActions, Button }from '@mui/material';
+import {Card,CardHeader,CardMedia,Typography,Box ,CardContent,Avatar, IconButton, CardActions}from '@mui/material';
 import ModeEditOutlineIcon from '@mui/icons-material/Edit';
 import {useDispatch,useSelector} from 'react-redux';
 import DeleteForeverIcon from '@mui/icons-material/Delete';
@@ -27,7 +27,6 @@ const handleEdit = () => {
 };  
  console.log(id);
   const handleDelete=(id)=>{
-    navigate(`/myBlogs/${id}`);
    if(window.confirm('Are you sure you want to delete this blog?')){
     dispatch(deleteBlog({ id, toast }))
    }

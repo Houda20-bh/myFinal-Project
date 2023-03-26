@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-export const getAllBlogs = createAsyncThunk("blogs/getAll", async (_, {rejectWithValue}) => {
+export const getAllBlogs = createAsyncThunk("blogs/getAll", async (page, {rejectWithValue}) => {
   try {
-    const { data } = await axios.get("http://localhost:5000/api/blogs");
+    const { data } = await axios.get(`http://localhost:5000/api/blogs?page=${page}`);
     return data;
   } catch (err) {
     return rejectWithValue(err.response.data);
@@ -43,7 +43,7 @@ export const createBlog = createAsyncThunk(
         config
       );
       toast.success("blog Added Successfully");
-      navigate("/myblogs");
+      navigate("/blogs");
       return data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -125,6 +125,8 @@ const blogSlice = createSlice({
   initialState: 
   {
     blog:{},
+    currentPage:1,
+    numberOfPages:null,
    },
   reducers: {
     EditBlog: (state, action) => {
@@ -132,6 +134,9 @@ const blogSlice = createSlice({
       el._id === action.payload ? (el.isEdited = !el.isEdited) : el.isEdited
       );
     },
+    setCurrentPage:(state,action)=>{
+      state.currentPage = action.payload;
+    }
   },
   extraReducers: {
     [getAllBlogs.pending]: (state, action) => {
@@ -139,7 +144,9 @@ const blogSlice = createSlice({
     },
     [getAllBlogs.fulfilled]: (state, action) => {
       state.loading = false;
-      state.blogList = action?.payload;
+      state.blogList = action?.payload.data;
+      state.numberOfPages=action?.payload.numberOfPages;
+      state.currentPage=action?.payload.currentPage;
     },
     [getAllBlogs.rejected]: (state, action) => {
       state.loading = false;
@@ -236,4 +243,4 @@ const blogSlice = createSlice({
 });
 
 export default blogSlice.reducer;
-export const { EditBlog } = blogSlice.actions;
+export const { EditBlog , setCurrentPage} = blogSlice.actions;

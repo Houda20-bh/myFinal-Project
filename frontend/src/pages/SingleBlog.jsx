@@ -1,13 +1,15 @@
 import React, { useEffect } from "react";
-import {Card,CardHeader,CardMedia,Typography,Box ,CardContent,Avatar, IconButton, CardActions }from '@mui/material';
+import {Card,CardHeader,CardMedia,Typography,Box ,CardContent,Avatar, IconButton }from '@mui/material';
 import {useDispatch,useSelector} from 'react-redux';
 import NotesIcon from '@mui/icons-material/Notes';
-import { useParams } from "react-router-dom";
+import { useParams,useNavigate } from "react-router-dom";
 import {getBlog } from "../Redux/blogSlice";
 import DisqusThread from '../Components/DisqusThread';
+import KeyboardBackspaceOutlinedIcon from '@mui/icons-material/KeyboardBackspaceOutlined';
 const SingleBlog = () => {
   const { id } = useParams();
-const dispatch = useDispatch();  
+const dispatch = useDispatch();
+const navigate = useNavigate();  
 const{blog}= useSelector((state)=>state.blogs)
  const {user}= useSelector((state) => state.auth);
    useEffect(() => {
@@ -16,6 +18,8 @@ const{blog}= useSelector((state)=>state.blogs)
     }
   }, [id]);
   return (
+<>
+    
     <Card sx={{
         width: "50%",
         height:'50%',
@@ -49,6 +53,12 @@ const{blog}= useSelector((state)=>state.blogs)
         image={blog.image}
         alt={blog.title}
       />
+          
+              <KeyboardBackspaceOutlinedIcon
+              color='warning' 
+               onClick={() => navigate("/blogs")}
+              />
+           
       <CardContent>
       <hr></hr>
       <br></br>
@@ -61,6 +71,11 @@ const{blog}= useSelector((state)=>state.blogs)
         </CardContent>
         <DisqusThread id={id} title={blog.title} path={`/blog/${id}`}/> 
         </Card>
+
+   
+   
+        </>
+    
         
   )
 }
