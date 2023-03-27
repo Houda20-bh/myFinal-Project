@@ -89,7 +89,7 @@ export const likeBlog = createAsyncThunk(
     };
     try {
       const { data } = await axios.patch(
-         `http://localhost:5000/api/blogs/like/${id}`,
+         `http://localhost:5000/api/blogs/like/${id}`,{id},
         config
       );
       return data;

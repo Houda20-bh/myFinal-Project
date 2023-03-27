@@ -15,7 +15,7 @@ router.get("/", getBlogs);
 router.get("/:id", getBlog);
 router.post("/", protect, setBlog);
 router.put("/:id", protect, updateBlog);
-router.patch("like/:id", protect,likeBlog);
+router.patch("/like/:id", protect,likeBlog);
 router.delete("/:id", protect, deleteBlog);
 router.get("/search", SearchBlog);
 

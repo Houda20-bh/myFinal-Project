@@ -8,11 +8,9 @@ import NotesIcon from '@mui/icons-material/Notes';
 import { toast } from 'react-toastify';
 import { Link ,useNavigate} from 'react-router-dom';
 import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
-import { likeBlog} from "../Redux/blogSlice";
-
+import {likeBlog} from "../Redux/blogSlice";
 function Blog({title,description,image,userName,isEdited,id,date,likes,}) {
 const {auth}= useSelector((state) => state)
-const userId = auth?.user?._id 
 const dispatch= useDispatch();
 const navigate = useNavigate();
 const handleEdit = () => {
@@ -30,39 +28,9 @@ const handleEdit = () => {
    if(window.confirm('Are you sure you want to delete this blog?')){
     dispatch(deleteBlog({ id, toast }))
    }
-  }
-  const Likes = () => {
-    if (likes.length > 0) {
-      return likes.find((like) => like === userId) ? (
-        <>
-          <IconButton fas icon="thumbs-up" />
-          &nbsp;
-          {likes.length > 2 ? (
-            <ThumbDownOutlinedIcon
-              title={`You and ${likes.length - 1} other people likes`}
-            >
-              {likes.length} Likes
-            </ThumbDownOutlinedIcon>
-          ) : (
-            `${likes.length} Like${likes.length > 1 ? "s" : ""}`
-          )}
-        </>
-      ) : (
-        <>
-          <IconButton  far icon="thumbs-up" />
-          &nbsp;{likes.length} {likes.length === 1 ? "Like" : "Likes"}
-        </>
-      );
-    }
-    return (
-      <>
-        <IconButton far icon="thumbs-up" />
-        &nbsp;Like
-      </>
-    );
-  };
+  }      
   const handleLike = () => {
-    dispatch(likeBlog({ userId }));
+    dispatch(likeBlog({id}));
   };
 
   return (
@@ -120,16 +88,9 @@ const handleEdit = () => {
 
         <IconButton 
             style={{ float: "right" }}
-            tag="a"
-            color="none"
-           onClick={!auth?.connectedUser ? null : handleLike}
+           onClick={ handleLike}
           >
-            {!auth?.connectedUser ? (
-              <ThumbDownOutlinedIcon  title="Please login to like "  color="warning">
-                <Likes />
-              </ThumbDownOutlinedIcon >) : (
-              <Likes /> 
-          ) } 
+              <ThumbDownOutlinedIcon  title="Please login to like "  color="warning"/>
           </IconButton >
     </CardActions >
   </Card>

@@ -8,6 +8,7 @@ const myBlog = require("../model/blogModel");
 const getBlogs = async (req, res) => {
   const { page } = req.query;
   try {
+
       const limit = 4;
       const startIndex = (Number(page) - 1) * limit;
       const total = await myBlog.countDocuments({});
@@ -108,15 +109,17 @@ const likeBlog = async (req, res) => {
 
     const Blog = await myBlog.findById(id);
 
-    const index = tour.likes.findIndex((id) => id === String(req.userId));
+    const index = Blog.likes.findIndex((id) => id === String(req.userId));
 
     if (index === -1) {
       Blog.likes.push(req.userId);
     } else {
       Blog.likes = Blog.likes.filter((id) => id !== String(req.userId));
     }
-} catch (error) {
-  res.status(404).json({ message: "Something went wrong" });
+    const updatedBlog=  await myBlog.findByIdAndUpdate(id,Blog,{new:true})
+    res.status(200).json(updatedBlog);
+  } catch (error) {
+  res.status(404).json({ message: error.message });
 }
   };
 
