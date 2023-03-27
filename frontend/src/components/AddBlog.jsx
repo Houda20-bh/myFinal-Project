@@ -15,7 +15,8 @@ function AddBlog() {
  const {user}= useSelector((state) => state.auth);
  useEffect(() => {
   error && toast.error(error);
-}, [error]);
+}, // // eslint-disable-next-line react-hooks/exhaustive-deps
+[error]);
 
   const [blogData, setBlogData]= useState({
   title:'',

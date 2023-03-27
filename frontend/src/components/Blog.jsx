@@ -2,20 +2,19 @@ import {Card,CardHeader,CardMedia,Typography,Box ,CardContent,Avatar, IconButton
 import ModeEditOutlineIcon from '@mui/icons-material/Edit';
 import {useDispatch,useSelector} from 'react-redux';
 import DeleteForeverIcon from '@mui/icons-material/Delete';
-import {deleteBlog, EditBlog} from '../Redux/blogSlice';
+import {deleteBlog} from '../Redux/blogSlice';
 import BlogDetail from './BlogDetail';
 import NotesIcon from '@mui/icons-material/Notes';
-import { toast } from 'react-toastify';
 import { Link ,useNavigate} from 'react-router-dom';
-import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
-import {likeBlog} from "../Redux/blogSlice";
-function Blog({title,description,image,userName,isEdited,id,date,likes,}) {
+// import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
+// import {likeBlog} from "../Redux/blogSlice";
+function Blog({title,description,image,userName,isEdited,date,user,blogId,id}) {
 const {auth}= useSelector((state) => state)
 const dispatch= useDispatch();
 const navigate = useNavigate();
+
 const handleEdit = () => {
-  dispatch(EditBlog(id))
-  navigate(`/myBlogs/${id}`);
+  navigate(`/myBlogs/${blogId}`);
 };
  const excerpt = (str) => {
   if (str.length > 20) {
@@ -23,15 +22,14 @@ const handleEdit = () => {
   }
   return str;
 };  
- console.log(id);
-  const handleDelete=(id)=>{
+  const handleDelete=()=>{
    if(window.confirm('Are you sure you want to delete this blog?')){
-    dispatch(deleteBlog({ id, toast }))
+    dispatch(deleteBlog({ id:blogId }))
    }
   }      
-  const handleLike = () => {
-    dispatch(likeBlog({id}));
-  };
+  // const handleLike = () => {
+  //   dispatch(likeBlog({id}));
+  // };
 
   return (
     <Card sx={{
@@ -81,17 +79,17 @@ const handleEdit = () => {
       </Typography></Box>
     </CardContent>
     <CardActions  sx={{marginLeft:'auto'}}>
-    {isEdited && <BlogDetail title={title} description={description}  id={id}/> }
+    {isEdited && <BlogDetail title={title} description={description}  id={blogId}/> }
 
-       {auth?.user && <><IconButton onClick={handleEdit} sx={{marginLeft:'auto'}}><ModeEditOutlineIcon color="warning"/></IconButton>
-        <IconButton onClick={()=>handleDelete(id)}>< DeleteForeverIcon color="error"/></IconButton></>}
+       {auth?.user && auth?.user?.user?._id===user && <><IconButton onClick={handleEdit} sx={{marginLeft:'auto'}}><ModeEditOutlineIcon color="warning"/></IconButton>
+        <IconButton onClick={()=>handleDelete(blogId)}>< DeleteForeverIcon color="error"/></IconButton></>}
 
-        <IconButton 
+        {/* <IconButton 
             style={{ float: "right" }}
            onClick={ handleLike}
           >
               <ThumbDownOutlinedIcon  title="Please login to like "  color="warning"/>
-          </IconButton >
+          </IconButton > */}
     </CardActions >
   </Card>
   )

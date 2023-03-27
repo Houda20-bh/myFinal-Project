@@ -1,19 +1,24 @@
-import React, {useState } from "react";
-import { updateBlog } from '../Redux/blogSlice';
+import React, {useEffect, useState } from "react";
+import { getBlog, updateBlog } from '../Redux/blogSlice';
 import {useDispatch,useSelector} from 'react-redux';
-import {EditBlog} from '../Redux/blogSlice';
 import { useParams } from "react-router-dom";
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+
 import {  Box,Button, InputLabel, TextField, Typography } from "@mui/material";
 const labelStyles = { mb: 1, mt: 2, fontSize: "24px", fontWeight: "bold" };
 
 function BlogDetail() {
-  const id = useParams().id;
-  const{blog}= useSelector((state)=>state.blogs)
-  const [updatedBlog, setUpdatedBlog] = useState({});
   const dispatch=useDispatch();
   const navigate = useNavigate()
+  const {id} = useParams();
+  useEffect(()=>{
+    dispatch(getBlog(id))
+  }, // eslint-disable-next-line react-hooks/exhaustive-deps
+  [id])
+  const{blog}= useSelector((state)=>state.blogs)
+  const [updatedBlog, setUpdatedBlog] = useState({});
+
   const handleChange = (e) => {
     setUpdatedBlog(({...updatedBlog,
       [e.target.name]: e.target.value,
@@ -25,7 +30,7 @@ function BlogDetail() {
   };
   const cancelHandler =(e)=>{
     e.preventDefault();
-    dispatch(EditBlog(id));
+    navigate("/myBlogs");
   }
     return (
          <div>
@@ -65,7 +70,7 @@ function BlogDetail() {
               onChange={handleChange}
               margin="auto"
               variant="outlined"
-              defaultValue={blog.description}
+              defaultValue={blog?.description}
             />
 
             <Button

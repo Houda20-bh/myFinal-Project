@@ -60,17 +60,8 @@ function Header() {
 
       </Box>
        <Box>
-       <form onSubmit={handleSubmit}>
        
-       <TextField variant={'standard'}
-         type="text"
-         placeholder="Search Post"
-         value={search}
-         onChange={(e) => setSearch(e.target.value)}
-       />
-       
-       <ZoomOutIcon variant='contained' sx={{margin:1,borderRadius:10}} color='warning' />
-     </form>
+      
        </Box></>
       }
      

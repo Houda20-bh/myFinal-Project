@@ -1,10 +1,6 @@
 
 import { useSelector } from 'react-redux';
-import Blog from '../Components/Blog';
-import blogSlice from '../Redux/blogSlice';
-import {Link} from 'react-router-dom'
-import img1 from '../Images/positive.jpg'
-import { Button,Typography,LinkComponent,Box } from "@mui/material";
+import {Box,Typography} from "@mui/material";
 function Home() {
  
   const {auth}= useSelector((state) => state);
@@ -27,13 +23,12 @@ function Home() {
           ? `Welcome ${auth?.user?.user?.name}`: "Welcome Everyone"} </i></h1>
           <br></br>
    <Box position={'relative'} width={'100%'} height='90vh'>
-    <img src={img1} alt='Positive vibes' width={'100%'} height='60%'/>
+    <img 
+      src="https://waynesboro.va.us/ImageRepository/Document?documentID=9249"
+      alt='Positive vibes' width={'100%'} height='60%'
+      />
    </Box>
-   <Box margin="auto">
-   <Button LinkComponent={Link} to='/login' variant='outlined' sx={{mr:2}}> Share Your Post
-    </Button>
-    <Button  LinkComponent={Link} to='/blogs' variant='contained' sx={{ml:2}}> View Your Posts</Button>
-   </Box>
+
    </center>
     </>
   )

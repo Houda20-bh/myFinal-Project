@@ -7,16 +7,18 @@ import {getBlog } from "../Redux/blogSlice";
 import DisqusThread from '../Components/DisqusThread';
 import KeyboardBackspaceOutlinedIcon from '@mui/icons-material/KeyboardBackspaceOutlined';
 const SingleBlog = () => {
-  const { id } = useParams();
+
 const dispatch = useDispatch();
 const navigate = useNavigate();  
 const{blog}= useSelector((state)=>state.blogs)
  const {user}= useSelector((state) => state.auth);
-   useEffect(() => {
-    if (id) {
-      dispatch(getBlog(id));
-    }
-  }, [id]);
+ let { id } = useParams();
+ useEffect(() => {
+  if (id) {
+    dispatch(getBlog(id));
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [id]);
   return (
 <>
     

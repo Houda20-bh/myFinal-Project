@@ -35,12 +35,12 @@ Email {": "} <i>{auth?.user?.user?.email}</i>
 </Typography>
 <hr></hr>
 <br></br> 
-    {/* <div>
+    <div>
       <center> 
          <br></br>
-        {auth?.connectedUser?.blogs.map((blog)=><Blog title={blog.title} description={blog.description} image={blog.image} userName={auth?.user?.user?.name} />)}
+        {auth?.connectedUser?.blogs.map((blog)=><Blog title={blog.title} description={blog.description} image={blog.image} blogId={blog._id} user={blog.user} userName={auth?.user?.user?.name} />)}
           </center>
-    </div> */}
+    </div>
 </Box>
     </>
   )
